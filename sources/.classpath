@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/core"/>
+	<classpathentry kind="src" path="src/eclipse"/>
+	<classpathentry kind="src" path="src/javac"/>
+	<classpathentry kind="lib" path="lib/build/core.runtime.jar" sourcepath="lib/contrib/core.runtime.zip"/>
+	<classpathentry kind="lib" path="lib/build/jdt.core.jar" sourcepath="lib/contrib/jdt.core.zip"/>
+	<classpathentry kind="lib" path="lib/build/lombok.jar" sourcepath="lib/contrib/lombok.zip"/>
+	<classpathentry kind="lib" path="lib/build/javac.jar" sourcepath="lib/contrib/javac.zip"/>
+	<classpathentry kind="lib" path="lib/build/ecj.jar" sourcepath="lib/contrib/ecj.zip"/>
+	<classpathentry kind="lib" path="lib/test/junit.jar" sourcepath="lib/contrib/junit.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

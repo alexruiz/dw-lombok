@@ -1,0 +1,50 @@
+<project name="lombok-javabeans" xmlns:ivy="antlib:com.zwitserloot.ivyplusplus">
+	<property name="ivy.retrieve.pattern" value="lib/[conf]/[artifact].[ext]" />
+	<available file="lib/ivyplusplus.jar" property="ivyplusplus.available" />
+
+	<target name="download-ipp" unless="ivyplusplus.available">
+		<mkdir dir="lib" />
+		<get src="http://projectlombok.org/downloads/ivyplusplus.jar" dest="lib/ivyplusplus.jar" usetimestamp="true" />
+	</target>
+
+	<target name="ensure-ipp" depends="download-ipp">
+		<taskdef classpath="lib/ivyplusplus.jar" resource="com/zwitserloot/ivyplusplus/antlib.xml" uri="antlib:com.zwitserloot.ivyplusplus" />
+	</target>
+
+	<target name="config-ivy" depends="ensure-ipp">
+		<ivy:configure file="buildScripts/ivysettings.xml" />
+	</target>
+
+	<target name="deps" depends="ensureBuildDeps, ensureRuntimeDeps, ensureTestDeps" />
+
+	<target name="ensureBuildDeps" depends="config-ivy">
+		<ivy:resolve file="buildScripts/ivy.xml" refresh="true" conf="build" />
+		<ivy:retrieve />
+	</target>
+
+	<target name="ensureRuntimeDeps" depends="config-ivy">
+		<ivy:resolve file="buildScripts/ivy.xml" refresh="true" conf="runtime" />
+		<ivy:retrieve />
+	</target>
+
+	<target name="ensureTestDeps" depends="config-ivy">
+		<ivy:resolve file="buildScripts/ivy.xml" refresh="true" conf="test" />
+		<ivy:retrieve />
+	</target>
+
+	<target name="contrib" depends="config-ivy" description="Downloads various non-crucial documentation, sources, etc that are useful when developing lombok.ast.">
+		<ivy:resolve file="buildScripts/ivy.xml" refresh="true" conf="contrib" />
+		<ivy:retrieve />
+	</target>
+
+	<target name="eclipse" depends="deps, contrib" description="Creates eclipse project files and downloads all dependencies. Open this directory as project in eclipse after running this target.">
+		<ivy:eclipsegen source="1.6">
+			<srcdir dir="src/core" />
+			<srcdir dir="src/eclipse" />
+			<srcdir dir="src/javac" />
+			<conf name="build" sources="contrib" />
+			<conf name="test" sources="contrib" />
+		</ivy:eclipsegen>
+	</target>
+
+</project>
