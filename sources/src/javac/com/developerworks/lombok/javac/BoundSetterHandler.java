@@ -171,14 +171,14 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
   private JCStatement oldValueVariableDecl(Name oldValueName, JavacNode fieldNode) {
     TreeMaker treeMaker = fieldNode.getTreeMaker();
     JCVariableDecl varDecl = (JCVariableDecl) fieldNode.get();
-    JCExpression init = createFieldAccessor(treeMaker, fieldNode);
+    JCExpression init = createFieldAccessor(fieldNode);
     return treeMaker.VarDef(treeMaker.Modifiers(FINAL), oldValueName, varDecl.vartype, init);
   }
   
   private JCStatement assignNewValueToFieldDecl(JavacNode fieldNode) {
     JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
     TreeMaker treeMaker = fieldNode.getTreeMaker();
-    JCExpression fieldRef = createFieldAccessor(treeMaker, fieldNode);
+    JCExpression fieldRef = createFieldAccessor(fieldNode);
     JCAssign assign = treeMaker.Assign(fieldRef, treeMaker.Ident(fieldDecl.name));
     return treeMaker.Exec(assign);
   }
@@ -189,7 +189,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     JCExpression fn = chainDots(treeMaker, fieldNode, "propertySupport", "firePropertyChange");
     List<JCExpression> args = List.<JCExpression> of(treeMaker.Ident(propertyReferenceName), 
                                                      treeMaker.Ident(oldValueName),
-                                                     createFieldAccessor(treeMaker, fieldNode));
+                                                     createFieldAccessor(fieldNode));
     JCMethodInvocation m = treeMaker.Apply(List.<JCExpression> nil(), fn, args);
     return treeMaker.Exec(m);
   }
