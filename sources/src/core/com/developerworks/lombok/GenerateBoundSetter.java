@@ -24,7 +24,31 @@ import lombok.AccessLevel;
 
 /**
  * Instructs lombok to generate a "bound" setter for an annotated field.
- *
+ * <p>
+ * For example, given this class:
+ * <pre>
+ * public class Person {
+ * 
+ *   &#64;GenerateBoundSetter private String firstName;
+ * }
+ * </pre>
+ * {@code BoundSetterHandler} (for both javac and eclipse) will generate the AST nodes that correspond to this code:
+ * <pre>
+ * public class Person {
+ * 
+ *   public static final String PROP_FIRST_NAME = "firstName";
+ *   
+ *   private String firstName;
+ *   
+ *   public void setFirstName(String value) {
+ *      String oldValue = firstName;
+ *      firstName = value;
+ *      propertySupport.firePropertyChange(PROP_FIRST_NAME, oldValue, firstName);
+ *   }
+ * }
+ * </pre>
+ * </p>
+ * 
  * @author Alex Ruiz
  */
 @Target(FIELD) @Retention(SOURCE)
