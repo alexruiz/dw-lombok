@@ -14,13 +14,12 @@
  */
 package com.developerworks.lombok.javac;
 
-import static com.developerworks.lombok.javac.Primitives.wrapperClassNameFor;
 import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 import lombok.javac.JavacNode;
 
-import com.sun.tools.javac.tree.*;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.*;
 import com.sun.tools.javac.util.*;
 
 /**
@@ -35,24 +34,12 @@ class FieldBuilder {
   }
 
   private Class<?> type;
-  private List<JCExpression> typeArgs = List.<JCExpression> nil();
   private Name name;
   private long modifiers;
   private List<JCExpression> args = List.<JCExpression> nil();
 
   FieldBuilder ofType(Class<?> newType) {
     type = newType;
-    return this;
-  }
-
-  FieldBuilder ofType(Class<?> newType, JCExpression typeArg, JavacNode node) {
-    type = newType;
-    JCExpression localTypeArg = typeArg;
-    if (localTypeArg instanceof JCTree.JCPrimitiveTypeTree) {
-      String wrapper = wrapperClassNameFor(localTypeArg.toString());
-      if (wrapper != null) localTypeArg = node.getTreeMaker().Ident(node.toName(wrapper));
-    }
-    typeArgs = List.of(localTypeArg);
     return this;
   }
 
@@ -74,9 +61,8 @@ class FieldBuilder {
   JCVariableDecl buildWith(JavacNode node) {
     TreeMaker treeMaker = node.getTreeMaker();
     JCExpression classType = chainDots(treeMaker, node, splitNameOf(type));
-    JCExpression varType = typeArgs.isEmpty() ? classType : treeMaker.TypeApply(classType, typeArgs);
-    JCExpression newVar = treeMaker.NewClass(null, null, varType, args, null);
-    return treeMaker.VarDef(treeMaker.Modifiers(modifiers), name, varType, newVar);
+    JCExpression newVar = treeMaker.NewClass(null, null, classType, args, null);
+    return treeMaker.VarDef(treeMaker.Modifiers(modifiers), name, classType, newVar);
   }
 
   private static String[] splitNameOf(Class<?> type) {
