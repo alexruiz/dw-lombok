@@ -189,9 +189,8 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
 
   private JCStatement fireChangeEventMethodDecl(String propertyNameFieldName, Name oldValueName, JavacNode fieldNode) {
     TreeMaker treeMaker = fieldNode.getTreeMaker();
-    Name propertyReferenceName = fieldNode.toName(propertyNameFieldName);
     JCExpression fn = chainDots(treeMaker, fieldNode, "propertySupport", "firePropertyChange");
-    List<JCExpression> args = List.<JCExpression> of(treeMaker.Ident(propertyReferenceName), 
+    List<JCExpression> args = List.<JCExpression> of(treeMaker.Ident(fieldNode.toName(propertyNameFieldName)), 
                                                      treeMaker.Ident(oldValueName),
                                                      createFieldAccessor(fieldNode));
     JCMethodInvocation m = treeMaker.Apply(List.<JCExpression> nil(), fn, args);
