@@ -15,11 +15,15 @@
 package com.developerworks.lombok.javac;
 
 import static com.developerworks.lombok.javac.FieldBuilder.newField;
+import static com.developerworks.lombok.javac.JCNoType.VoidType;
+import static com.developerworks.lombok.javac.MemberChecks.*;
+import static com.developerworks.lombok.javac.MethodBuilder.newMethod;
+import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
 import static com.developerworks.lombok.util.Names.nameOfConstantHavingPropertyName;
 import static com.sun.tools.javac.code.Flags.*;
-import static lombok.core.AST.Kind.FIELD;
+import static lombok.core.handlers.TransformationsUtil.NON_NULL_PATTERN;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
-import static lombok.javac.handlers.JavacHandlerUtil.MemberExistsResult.NOT_EXISTS;
+import static lombok.javac.handlers.LombokBridge.createFieldAccessor;
 
 import java.util.Collection;
 
@@ -31,9 +35,15 @@ import org.mangosdk.spi.ProviderFor;
 
 import com.developerworks.lombok.GenerateBoundSetter;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCAssign;
+import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.*;
+import com.sun.tools.javac.util.*;
 
 /**
  * Generates a "bound" setter for a field annotated with <code>{@link GenerateBoundSetter}</code>.
@@ -69,8 +79,8 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
  * 
  * @author Alex Ruiz
  */
-@ProviderFor(JavacAnnotationHandler.class) public class BoundSetterHandler implements
-    JavacAnnotationHandler<GenerateBoundSetter> {
+@ProviderFor(JavacAnnotationHandler.class) 
+public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundSetter> {
 
   private static final Class<GenerateBoundSetter> TARGET_ANNOTATION_TYPE = GenerateBoundSetter.class;
 
@@ -92,46 +102,95 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
       astWrapper.addError(String.format("@%s is only supported on fields", TARGET_ANNOTATION_TYPE.getName()));
       return true;
     }
-    JavacNode typeNode = findTypeNodeFrom(mayBeField);
-    generateSetter(fields, typeNode, annotation.getInstance());
+    generateSetter(fields, annotation.getInstance());
     return true;
   }
 
-  private static boolean isField(JavacNode node) {
-    return FIELD.equals(node.getKind());
+  private void generateSetter(Collection<JavacNode> fields, GenerateBoundSetter setter) {
+    for (JavacNode fieldNode : fields) {
+      String propertyNameFieldName = nameOfConstantHavingPropertyName(fieldNode.getName());
+      generatePropertyNameConstant(propertyNameFieldName, fieldNode);
+      generateSetter(propertyNameFieldName, setter, fieldNode);
+    }
   }
 
-  private static JavacNode findTypeNodeFrom(JavacNode node) {
-    JavacNode n = node;
-    while (n != null && !isJCClassDecl(n))
-      n = n.up();
-    if (!isJCClassDecl(n)) return null;
-    return n;
-  }
-
-  private static boolean isJCClassDecl(JavacNode node) {
-    return node != null && node.get() instanceof JCClassDecl;
-  }
-
-  private void generateSetter(Collection<JavacNode> fields, JavacNode typeNode, GenerateBoundSetter setter) {
-    for (JavacNode fieldNode : fields)
-      generateSetter(fieldNode, typeNode, setter);
-  }
-
-  private void generateSetter(JavacNode fieldNode, JavacNode typeNode, GenerateBoundSetter setter) {
-    generatePropertyNameConstant(fieldNode, typeNode);
-  }
-
-  private void generatePropertyNameConstant(JavacNode fieldNode, JavacNode typeNode) {
+  private void generatePropertyNameConstant(String propertyNameFieldName, JavacNode fieldNode) {
     String propertyName = fieldNode.getName();
-    String nameOfConstant = nameOfConstantHavingPropertyName(propertyName);
-    if (!fieldExists(nameOfConstant, typeNode).equals(NOT_EXISTS)) return;
+    if (fieldAlreadyExists(propertyNameFieldName, fieldNode)) return;
     JCExpression propertyNameExpression = fieldNode.getTreeMaker().Literal(propertyName);
     JCVariableDecl fieldDecl = newField().ofType(String.class)
-                                         .withName(fieldNode.toName(nameOfConstant))
+                                         .withName(fieldNode.toName(propertyNameFieldName))
                                          .withModifiers(PUBLIC | STATIC | FINAL)
                                          .withArgs(propertyNameExpression)
-                                         .buildWith(typeNode);
-    injectField(typeNode, fieldDecl);
+                                         .buildWith(fieldNode);
+    injectField(fieldNode, fieldDecl);
+  }
+
+  private void generateSetter(String propertyNameFieldName, GenerateBoundSetter setter, JavacNode fieldNode) {
+    AccessLevel accessLevel = setter.value();
+    if (shouldStopGenerationBasedOn(accessLevel)) return;
+    JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
+    String setterName = toSetterName(fieldDecl);
+    if (methodAlreadyExists(setterName, fieldNode)) return;
+    injectMethod(fieldNode.up(), createSetterDecl(accessLevel, propertyNameFieldName, setterName, fieldNode));
+  }
+
+  private JCMethodDecl createSetterDecl(AccessLevel accessLevel, String propertyNameFieldName, String setterName,
+      JavacNode fieldNode) {
+    JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
+    long access = toJavacModifier(accessLevel) | (fieldDecl.mods.flags & STATIC);
+    TreeMaker treeMaker = fieldNode.getTreeMaker();
+    List<JCAnnotation> nonNulls = findAnnotations(fieldNode, NON_NULL_PATTERN);
+    return newMethod().withModifiers(treeMaker.Modifiers(access))
+                      .withName(fieldNode.toName(setterName))
+                      .withReturnType(treeMaker.Type(VoidType()))
+                      .withParameters(List.of(parameter(nonNulls, fieldNode)))
+                      .withBody(body(propertyNameFieldName, fieldNode))
+                      .buildWith(treeMaker);
+  }
+
+  private JCVariableDecl parameter(List<JCAnnotation> nonNulls, JavacNode fieldNode) {
+    JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
+    TreeMaker treeMaker = fieldNode.getTreeMaker();
+    return treeMaker.VarDef(treeMaker.Modifiers(0, nonNulls), fieldDecl.name, fieldDecl.vartype, null);
+  }
+
+  private JCBlock body(String propertyNameFieldName, JavacNode fieldNode) {
+    return fieldNode.getTreeMaker().Block(0, changePropertyValueStatements(propertyNameFieldName, fieldNode));
+  }
+
+  private List<JCStatement> changePropertyValueStatements(String propertyNameFieldName, JavacNode fieldNode) {
+    Name oldValueName = fieldNode.toName("old");
+    JCStatement[] statements = new JCStatement[3];
+    statements[0] = oldValueVariableDecl(oldValueName, fieldNode);
+    statements[1] = assignNewValueToFieldDecl(fieldNode);
+    statements[2] = fireChangeEventMethodDecl(propertyNameFieldName, oldValueName, fieldNode);
+    return List.<JCStatement> from(statements);
+  }
+
+  private JCStatement oldValueVariableDecl(Name oldValueName, JavacNode fieldNode) {
+    TreeMaker treeMaker = fieldNode.getTreeMaker();
+    JCVariableDecl varDecl = (JCVariableDecl) fieldNode.get();
+    JCExpression init = createFieldAccessor(treeMaker, fieldNode);
+    return treeMaker.VarDef(treeMaker.Modifiers(FINAL), oldValueName, varDecl.vartype, init);
+  }
+  
+  private JCStatement assignNewValueToFieldDecl(JavacNode fieldNode) {
+    JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
+    TreeMaker treeMaker = fieldNode.getTreeMaker();
+    JCExpression fieldRef = createFieldAccessor(treeMaker, fieldNode);
+    JCAssign assign = treeMaker.Assign(fieldRef, treeMaker.Ident(fieldDecl.name));
+    return treeMaker.Exec(assign);
+  }
+
+  private JCStatement fireChangeEventMethodDecl(String propertyNameFieldName, Name oldValueName, JavacNode fieldNode) {
+    TreeMaker treeMaker = fieldNode.getTreeMaker();
+    Name propertyReferenceName = fieldNode.toName(propertyNameFieldName);
+    JCExpression fn = chainDots(treeMaker, fieldNode, "propertySupport", "firePropertyChange");
+    List<JCExpression> args = List.<JCExpression> of(treeMaker.Ident(propertyReferenceName), 
+                                                     treeMaker.Ident(oldValueName),
+                                                     createFieldAccessor(treeMaker, fieldNode));
+    JCMethodInvocation m = treeMaker.Apply(List.<JCExpression> nil(), fn, args);
+    return treeMaker.Exec(m);
   }
 }

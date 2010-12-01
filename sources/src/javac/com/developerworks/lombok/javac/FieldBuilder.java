@@ -14,6 +14,7 @@
  */
 package com.developerworks.lombok.javac;
 
+import static com.sun.tools.javac.util.List.nil;
 import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 import lombok.javac.JavacNode;
 
@@ -36,7 +37,7 @@ class FieldBuilder {
   private Class<?> type;
   private Name name;
   private long modifiers;
-  private List<JCExpression> args = List.<JCExpression> nil();
+  private List<JCExpression> args = nil();
 
   FieldBuilder ofType(Class<?> newType) {
     type = newType;
