@@ -25,6 +25,7 @@ import static lombok.core.handlers.TransformationsUtil.NON_NULL_PATTERN;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
 import static lombok.javac.handlers.LombokBridge.createFieldAccessor;
 
+import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 
 import lombok.AccessLevel;
@@ -33,7 +34,7 @@ import lombok.javac.*;
 
 import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.GenerateBoundSetter;
+import com.developerworks.lombok.*;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
@@ -74,7 +75,10 @@ import com.sun.tools.javac.util.*;
  * </pre>
  * </p>
  * <p>
- * <strong>Note:</strong> This annotation handler ass
+ * <strong>Note:</strong> This annotation handler assumes that the class declaring the annotated field has a field
+ * of type <code>{@link PropertyChangeSupport}</code> with name "propertySupport." You can either add this expected
+ * field manually or annotate the class with <code>{@link GenerateJavaBean}</code> to have 
+ * <code>{@link JavaBeanHandler}</code> generate it for you.
  * </p>
  * 
  * @author Alex Ruiz

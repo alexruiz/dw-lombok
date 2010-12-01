@@ -18,6 +18,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static lombok.AccessLevel.PUBLIC;
 
+import java.beans.PropertyChangeSupport;
 import java.lang.annotation.*;
 
 import lombok.AccessLevel;
@@ -26,6 +27,7 @@ import lombok.AccessLevel;
  * Instructs lombok to generate a "bound" setter for an annotated field.
  * <p>
  * For example, given this class:
+ * 
  * <pre>
  * public class Person {
  * 
@@ -33,6 +35,7 @@ import lombok.AccessLevel;
  * }
  * </pre>
  * {@code BoundSetterHandler} (for both javac and eclipse) will generate the AST nodes that correspond to this code:
+ * 
  * <pre>
  * public class Person {
  * 
@@ -47,6 +50,12 @@ import lombok.AccessLevel;
  *   }
  * }
  * </pre>
+ * </p>
+ * <p>
+ * <strong>Note:</strong> The handler for this annotation assumes that the class declaring the annotated field has a
+ * field of type <code>{@link PropertyChangeSupport}</code> with name "propertySupport." You can either add this
+ * expected field manually or annotate the class with <code>{@link GenerateJavaBean}</code> to have lombok generate it
+ * for you.
  * </p>
  * 
  * @author Alex Ruiz
