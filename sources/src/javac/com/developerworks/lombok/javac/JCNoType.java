@@ -27,20 +27,18 @@ import com.sun.tools.javac.code.Type;
  */
 class JCNoType extends Type implements NoType {
 
-  // TODO check if JCNoType is similar to jcNode.getTypeUtils().getNoType(TypeKind.NULL);
-  
   static JCNoType VoidType() {
     return new JCNoType(VOID);
   }
-  
-  JCNoType(int tag) {
+
+  private JCNoType(int tag) {
     super(tag, null);
   }
 
   @Override public TypeKind getKind() {
     if (tag == VOID) return TypeKind.VOID;
     if (tag == NONE) return TypeKind.NONE;
-    throw new AssertionError("Unexpected tag: " + tag);
+    throw new IllegalStateException("Unexpected tag: " + tag);
   }
 
   @Override public <R, P> R accept(TypeVisitor<R, P> v, P p) {
