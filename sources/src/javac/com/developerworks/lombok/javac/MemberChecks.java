@@ -14,17 +14,30 @@
  */
 package com.developerworks.lombok.javac;
 
-import static lombok.core.AST.Kind.FIELD;
+import static com.sun.tools.javac.code.Flags.INTERFACE;
+import static lombok.core.AST.Kind.*;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
 import static lombok.javac.handlers.JavacHandlerUtil.MemberExistsResult.NOT_EXISTS;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.JavacHandlerUtil.MemberExistsResult;
+
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.tree.*;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 
 /**
  * @author Alex Ruiz
  */
 final class MemberChecks {
 
+  static boolean isClass(JavacNode node) {
+    JCTree javacNode = node.get();
+    if (!(javacNode instanceof JCClassDecl)) return false;
+    JCClassDecl classDecl = (JCClassDecl) javacNode;
+    boolean notAClass = (classDecl.mods.flags & (INTERFACE | Flags.ENUM | Flags.ANNOTATION)) != 0;
+    return !notAClass;
+  }
+  
   static boolean isField(JavacNode node) {
     return FIELD.equals(node.getKind());
   }

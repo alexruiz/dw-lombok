@@ -34,7 +34,7 @@ import lombok.AccessLevel;
  *   &#64;GenerateBoundSetter private String firstName;
  * }
  * </pre>
- * {@code BoundSetterHandler} (for both javac and eclipse) will generate the AST nodes that correspond to this code:
+ * our lombok annotation handlers (for both javac and eclipse) will generate the AST nodes that correspond to this code:
  * 
  * <pre>
  * public class Person {

@@ -16,12 +16,30 @@ package com.developerworks.lombok.util;
 
 import static java.lang.Character.*;
 
+import java.beans.*;
+
 /**
  * Utility methods related to names.
  *
  * @author Alex Ruiz
  */
 public final class Names {
+
+  /** Name of the field of type <code>{@link PropertyChangeSupport}</code>. */
+  public static final String PROPERTY_SUPPORT_FIELD_NAME = "propertySupport";
+  
+  /** Name of the method argument of type <code>{@link PropertyChangeListener}</code>. */
+  public static final String LISTENER_ARG_NAME = "listener";
+
+  /**
+   * Splits the name of the class using "\." as the regular expression.. For example, {@code java.lang.String} will be
+   * split into { "java", "lang", "String" }.
+   * @param type the given class.
+   * @return the name of the type split using "\." as the regular expression.
+   */
+  public static String[] splitNameOf(Class<?> type) {
+    return type.getName().split("\\.");
+  }
 
   /**
    * Creates the name of the constant that holds the name of a property. For example, if the name of a property is

@@ -14,6 +14,7 @@
  */
 package com.developerworks.lombok.javac;
 
+import static com.developerworks.lombok.util.Names.splitNameOf;
 import static com.sun.tools.javac.util.List.nil;
 import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 import lombok.javac.JavacNode;
@@ -64,10 +65,6 @@ class FieldBuilder {
     JCExpression classType = chainDots(treeMaker, node, splitNameOf(type));
     JCExpression newVar = treeMaker.NewClass(null, null, classType, args, null);
     return treeMaker.VarDef(treeMaker.Modifiers(modifiers), name, classType, newVar);
-  }
-
-  private static String[] splitNameOf(Class<?> type) {
-    return type.getName().split("\\.");
   }
 
   private FieldBuilder() {}

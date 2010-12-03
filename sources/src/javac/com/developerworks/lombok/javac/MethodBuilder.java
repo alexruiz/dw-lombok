@@ -15,11 +15,11 @@
 package com.developerworks.lombok.javac;
 
 import static com.sun.tools.javac.util.List.nil;
+import lombok.javac.JavacNode;
 
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.*;
@@ -36,7 +36,7 @@ class MethodBuilder {
     return new MethodBuilder();
   }
 
-  private JCModifiers modifiers;
+  private long modifiers;
   private Name name;
   private JCExpression returnType;
   private List<JCVariableDecl> parameters = nil();
@@ -46,7 +46,7 @@ class MethodBuilder {
 
   private MethodBuilder() {}
 
-  MethodBuilder withModifiers(JCModifiers newModifiers) {
+  MethodBuilder withModifiers(long newModifiers) {
     modifiers = newModifiers;
     return this;
   }
@@ -81,8 +81,9 @@ class MethodBuilder {
     return this;
   }
 
-  JCMethodDecl buildWith(TreeMaker treeMaker) {
-    List<JCTypeParameter> generics = nil();
-    return treeMaker.MethodDef(modifiers, name, returnType, generics, parameters, throwsClauses, body, defaultValue);
+  JCMethodDecl buildWith(JavacNode node) {
+    TreeMaker treeMaker = node.getTreeMaker();
+    return treeMaker.MethodDef(treeMaker.Modifiers(modifiers), name, returnType, List.<JCTypeParameter> nil(),
+        parameters, throwsClauses, body, defaultValue);
   }
 }

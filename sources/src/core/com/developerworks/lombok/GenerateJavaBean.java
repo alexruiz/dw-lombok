@@ -21,7 +21,33 @@ import java.lang.annotation.*;
 
 /**
  * Instructs lombok to generate the necessary code to make an annotated Java class a JavaBean.
+ * <p>
+ * For example, given this class:
  * 
+ * <pre>
+ * &#64;GenerateJavaBean
+ * public class Person {
+ * 
+ * }
+ * </pre>
+ * our lombok annotation handlers (for both javac and eclipse) will generate the AST nodes that correspond to this code:
+ * 
+ * <pre>
+ * public class Person {
+ * 
+ *   private PropertyChangeSupport propertySupport = new PropertyChangeSupport(this);
+
+ *   public void addPropertyChangeListener(PropertyChangeListener listener) {
+ *     propertySupport.addPropertyChangeListener(listener);
+ *   }
+ *
+ *   public void removePropertyChangeListener(PropertyChangeListener listener) {
+ *     propertySupport.removePropertyChangeListener(listener);
+ *   }
+ * }
+ * </pre>
+ * </p>
+ *  
  * @author Alex Ruiz
  */
 @Target(TYPE) @Retention(SOURCE) 
