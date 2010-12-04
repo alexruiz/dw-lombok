@@ -89,7 +89,8 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
   private static final Class<GenerateBoundSetter> TARGET_ANNOTATION_TYPE = GenerateBoundSetter.class;
 
   /**
-   * Called when an annotation is found that is likely to match <code>{@link GenerateBoundSetter}</code>.
+   * Called when an annotation is found that is likely to match <code>{@link GenerateBoundSetter}</code>. This is were
+   * AST node generation happens.
    * @param annotation the actual annotation.
    * @param ast the javac AST node representing the annotation.
    * @param astWrapper the lombok AST wrapper around {@code ast}.
@@ -142,15 +143,15 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
   private JCMethodDecl createSetterDecl(AccessLevel accessLevel, String propertyNameFieldName, String setterName,
       JavacNode fieldNode) {
     JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
-    long access = toJavacModifier(accessLevel) | (fieldDecl.mods.flags & STATIC);
+    long accessModifiers = toJavacModifier(accessLevel) | (fieldDecl.mods.flags & STATIC);
     TreeMaker treeMaker = fieldNode.getTreeMaker();
     List<JCAnnotation> nonNulls = findAnnotations(fieldNode, NON_NULL_PATTERN);
-    return newMethod().withModifiers(treeMaker.Modifiers(access))
+    return newMethod().withModifiers(accessModifiers)
                       .withName(fieldNode.toName(setterName))
                       .withReturnType(treeMaker.Type(VoidType()))
                       .withParameters(List.of(parameter(nonNulls, fieldNode)))
                       .withBody(body(propertyNameFieldName, fieldNode))
-                      .buildWith(treeMaker);
+                      .buildWith(fieldNode);
   }
 
   private JCVariableDecl parameter(List<JCAnnotation> nonNulls, JavacNode fieldNode) {
