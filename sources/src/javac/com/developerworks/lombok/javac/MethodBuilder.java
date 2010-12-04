@@ -23,11 +23,11 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.*;
-import com.sun.tools.javac.util.*;
+import com.sun.tools.javac.util.List;
 
 /**
  * Simplifies creation of methods.
- * 
+ *
  * @author Alex Ruiz
  */
 class MethodBuilder {
@@ -37,7 +37,7 @@ class MethodBuilder {
   }
 
   private long modifiers;
-  private Name name;
+  private String name;
   private JCExpression returnType;
   private List<JCVariableDecl> parameters = nil();
   private List<JCExpression> throwsClauses = nil();
@@ -51,7 +51,7 @@ class MethodBuilder {
     return this;
   }
 
-  MethodBuilder withName(Name newName) {
+  MethodBuilder withName(String newName) {
     name = newName;
     return this;
   }
@@ -83,7 +83,7 @@ class MethodBuilder {
 
   JCMethodDecl buildWith(JavacNode node) {
     TreeMaker treeMaker = node.getTreeMaker();
-    return treeMaker.MethodDef(treeMaker.Modifiers(modifiers), name, returnType, List.<JCTypeParameter> nil(),
-        parameters, throwsClauses, body, defaultValue);
+    return treeMaker.MethodDef(treeMaker.Modifiers(modifiers), node.toName(name), returnType,
+        List.<JCTypeParameter> nil(), parameters, throwsClauses, body, defaultValue);
   }
 }
