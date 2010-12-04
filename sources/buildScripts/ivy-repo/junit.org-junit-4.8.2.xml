@@ -10,6 +10,6 @@
   </configurations>
   <publications>
     <artifact conf="test" url="http://cloud.github.com/downloads/KentBeck/junit/junit-4.8.2.jar" />
-    <artifact conf="sources" url="https://github.com/downloads/KentBeck/junit/junit-4.8.2-src.jar" />
+    <artifact conf="sources" url="http://cloud.github.com/downloads/KentBeck/junit/junit-4.8.2-src.jar" />
   </publications>
 </ivy-module>

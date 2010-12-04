@@ -9,6 +9,7 @@
   </configurations>
   <dependencies>
     <dependency org="junit.org" name="junit" rev="4.8.2" conf="test; contrib->sources" />
+    <dependency org="projectlombok.org" name="lombok-test-core" rev="0.9.3" conf="test; contrib->sources" />
 
     <dependency org="projectlombok.org" name="lombok" rev="0.9.3" conf="build; contrib->sources" />
     <dependency org="projectlombok.org" name="spi" rev="0.2.4" conf="build" />

@@ -15,14 +15,14 @@
 package com.developerworks.lombok.javac;
 
 import static com.sun.tools.javac.code.Flags.INTERFACE;
-import static lombok.core.AST.Kind.*;
+import static lombok.core.AST.Kind.FIELD;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
 import static lombok.javac.handlers.JavacHandlerUtil.MemberExistsResult.NOT_EXISTS;
 import lombok.javac.JavacNode;
 import lombok.javac.handlers.JavacHandlerUtil.MemberExistsResult;
 
 import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.tree.*;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 
 /**
@@ -34,18 +34,17 @@ final class MemberChecks {
     JCTree javacNode = node.get();
     if (!(javacNode instanceof JCClassDecl)) return false;
     JCClassDecl classDecl = (JCClassDecl) javacNode;
-    boolean notAClass = (classDecl.mods.flags & (INTERFACE | Flags.ENUM | Flags.ANNOTATION)) != 0;
-    return !notAClass;
+    return (classDecl.mods.flags & (INTERFACE | Flags.ENUM | Flags.ANNOTATION)) == 0;
   }
-  
+
   static boolean isField(JavacNode node) {
     return FIELD.equals(node.getKind());
   }
-  
+
   static boolean fieldAlreadyExists(String fieldName, JavacNode node) {
     return existsYesOrNo(fieldExists(fieldName, node));
   }
-  
+
   static boolean methodAlreadyExists(String methodName, JavacNode node) {
     return existsYesOrNo(methodExists(methodName, node));
   }
@@ -53,6 +52,6 @@ final class MemberChecks {
   private static boolean existsYesOrNo(MemberExistsResult result) {
     return !result.equals(NOT_EXISTS);
   }
-  
+
   private MemberChecks() {}
 }
