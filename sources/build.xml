@@ -42,6 +42,9 @@
 			<srcdir dir="src/core" />
 			<srcdir dir="src/eclipse" />
 			<srcdir dir="src/javac" />
+      <srcdir dir="test/core" />
+      <srcdir dir="test/eclipse" />
+      <srcdir dir="test/javac" />
 			<conf name="build" sources="contrib" />
 			<conf name="test" sources="contrib" />
 		</ivy:eclipsegen>

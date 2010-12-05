@@ -200,4 +200,12 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     JCMethodInvocation m = treeMaker.Apply(List.<JCExpression> nil(), fn, args);
     return treeMaker.Exec(m);
   }
+
+  /**
+   * Indicates whether this handler requires resolution.
+   * @return {@code false}.
+   */
+  @Override public boolean isResolutionBased() {
+    return false;
+  }
 }

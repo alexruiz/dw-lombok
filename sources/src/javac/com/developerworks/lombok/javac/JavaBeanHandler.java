@@ -159,4 +159,12 @@ public class JavaBeanHandler implements JavacAnnotationHandler<GenerateJavaBean>
   private Name listenerArgName(JavacNode typeNode) {
     return typeNode.toName(LISTENER_ARG_NAME);
   }
+
+  /**
+   * Indicates whether this handler requires resolution.
+   * @return {@code false}.
+   */
+  @Override public boolean isResolutionBased() {
+    return false;
+  }
 }
