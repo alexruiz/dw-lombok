@@ -40,6 +40,7 @@ import com.developerworks.lombok.GenerateJavaBean;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
@@ -110,19 +111,32 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
       astWrapper.addError(String.format("@%s is only supported on fields", TARGET_ANNOTATION_TYPE.getName()));
       return true;
     }
-    generateSetter(fields, annotation.getInstance());
+    JavacNode typeNode = findTypeNodeFrom(mayBeField);
+    generateSetter(fields, annotation.getInstance(), typeNode);
     return true;
   }
 
-  private void generateSetter(Collection<JavacNode> fields, GenerateBoundSetter setter) {
+  private static JavacNode findTypeNodeFrom(JavacNode node) {
+    JavacNode n = node;
+    while (n != null && !isJCClassDecl(n))
+      n = n.up();
+    if (!isJCClassDecl(n)) return null;
+    return n;
+  }
+
+  private static boolean isJCClassDecl(JavacNode node) {
+    return node != null && node.get() instanceof JCClassDecl;
+  }
+
+  private void generateSetter(Collection<JavacNode> fields, GenerateBoundSetter setter, JavacNode typeNode) {
     for (JavacNode fieldNode : fields) {
       String propertyNameFieldName = nameOfConstantHavingPropertyName(fieldNode.getName());
-      generatePropertyNameConstant(propertyNameFieldName, fieldNode);
+      generatePropertyNameConstant(propertyNameFieldName, fieldNode, typeNode);
       generateSetter(propertyNameFieldName, setter, fieldNode);
     }
   }
 
-  private void generatePropertyNameConstant(String propertyNameFieldName, JavacNode fieldNode) {
+  private void generatePropertyNameConstant(String propertyNameFieldName, JavacNode fieldNode, JavacNode typeNode) {
     String propertyName = fieldNode.getName();
     if (fieldAlreadyExists(propertyNameFieldName, fieldNode)) return;
     JCExpression propertyNameExpression = fieldNode.getTreeMaker().Literal(propertyName);
@@ -130,8 +144,8 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
                                          .withName(propertyNameFieldName)
                                          .withModifiers(PUBLIC | STATIC | FINAL)
                                          .withArgs(propertyNameExpression)
-                                         .buildWith(fieldNode);
-    injectField(fieldNode, fieldDecl);
+                                         .buildWith(typeNode);
+    injectField(typeNode, fieldDecl);
   }
 
   private void generateSetter(String propertyNameFieldName, GenerateBoundSetter setter, JavacNode fieldNode) {

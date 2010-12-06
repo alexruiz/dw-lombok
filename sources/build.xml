@@ -47,6 +47,10 @@
       <srcdir dir="test/javac" />
 			<conf name="build" sources="contrib" />
 			<conf name="test" sources="contrib" />
+      <settings>
+        <url url="http://cloud.github.com/downloads/alexruiz/dw-lombok/lombok.eclipse.settings" />
+      </settings>
+      <apt location="lib/build/spi.jar" />
 		</ivy:eclipsegen>
 	</target>
 
