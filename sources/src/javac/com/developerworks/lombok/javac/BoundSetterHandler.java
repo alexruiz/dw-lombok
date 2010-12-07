@@ -19,6 +19,7 @@ import static com.developerworks.lombok.javac.JCNoType.VoidType;
 import static com.developerworks.lombok.javac.MemberChecks.*;
 import static com.developerworks.lombok.javac.MethodBuilder.newMethod;
 import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
+import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInField;
 import static com.developerworks.lombok.util.Names.nameOfConstantHavingPropertyName;
 import static com.sun.tools.javac.code.Flags.*;
 import static lombok.core.handlers.TransformationsUtil.NON_NULL_PATTERN;
@@ -30,13 +31,11 @@ import java.util.Collection;
 
 import lombok.AccessLevel;
 import lombok.core.AnnotationValues;
-import lombok.javac.JavacAnnotationHandler;
-import lombok.javac.JavacNode;
+import lombok.javac.*;
 
 import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.GenerateBoundSetter;
-import com.developerworks.lombok.GenerateJavaBean;
+import com.developerworks.lombok.*;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
@@ -47,8 +46,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.*;
-import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.*;
 
 /**
  * Generates a "bound" setter for a field annotated with <code>{@link GenerateBoundSetter}</code>.
@@ -108,7 +106,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     JavacNode mayBeField = astWrapper.up();
     if (mayBeField == null) return false;
     if (!isField(mayBeField)) {
-      astWrapper.addError(String.format("@%s is only supported on fields", TARGET_ANNOTATION_TYPE.getName()));
+      astWrapper.addError(annotationShouldBeUsedInField(TARGET_ANNOTATION_TYPE));
       return true;
     }
     JavacNode typeNode = findTypeNodeFrom(mayBeField);
@@ -116,15 +114,14 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     return true;
   }
 
-  private static JavacNode findTypeNodeFrom(JavacNode node) {
+  private JavacNode findTypeNodeFrom(JavacNode node) {
     JavacNode n = node;
-    while (n != null && !isJCClassDecl(n))
-      n = n.up();
-    if (!isJCClassDecl(n)) return null;
+    while (n != null && !isTypeDeclaration(n)) n = n.up();
+    if (!isTypeDeclaration(n)) return null;
     return n;
   }
 
-  private static boolean isJCClassDecl(JavacNode node) {
+  private boolean isTypeDeclaration(JavacNode node) {
     return node != null && node.get() instanceof JCClassDecl;
   }
 
