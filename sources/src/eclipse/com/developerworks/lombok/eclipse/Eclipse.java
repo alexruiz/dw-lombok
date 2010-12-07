@@ -12,10 +12,15 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok;
+package com.developerworks.lombok.eclipse;
 
+import static com.developerworks.lombok.eclipse.MemberChecks.isField;
 import static lombok.eclipse.Eclipse.*;
+import static org.eclipse.jdt.internal.compiler.ast.TypeReference.baseTypeReference;
+import static org.eclipse.jdt.internal.compiler.lookup.TypeIds.T_void;
+import lombok.eclipse.EclipseNode;
 
+import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.ast.*;
 
 /**
@@ -36,6 +41,31 @@ final class Eclipse {
     StringLiteral string = new StringLiteral(s.toCharArray(), source.sourceStart, source.sourceEnd, 0);
     setGeneratedBy(string, source);
     return string;
+  }
+
+  static MethodDeclaration methodDeclaration(CompilationResult compilationResult, ASTNode source) {
+    MethodDeclaration method = new MethodDeclaration(compilationResult);
+    copySourceStartAndEnt(source, method);
+    setGeneratedBy(method, source);
+    return method;
+  }
+  
+  private static void copySourceStartAndEnt(ASTNode src, ASTNode dest) {
+    dest.sourceStart = src.sourceStart;
+    dest.sourceEnd = src.sourceEnd;
+  }
+
+  static TypeReference voidType(ASTNode source) {
+    TypeReference type = baseTypeReference(T_void, 0);
+    copySourceStartAndEnt(source, type);
+    return type;
+  }
+  
+  static TypeDeclaration parentOf(EclipseNode node) {
+    if (isField(node)) return (TypeDeclaration) node.up().get();
+    for (EclipseNode child : node.down())
+      if (isField(child)) return parentOf(child);
+    return null;
   }
 
   private Eclipse() {}

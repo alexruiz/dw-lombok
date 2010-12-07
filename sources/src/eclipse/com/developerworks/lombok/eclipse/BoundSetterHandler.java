@@ -12,16 +12,19 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok;
+package com.developerworks.lombok.eclipse;
 
-import static com.developerworks.lombok.Eclipse.stringLiteral;
-import static com.developerworks.lombok.FieldBuilder.newField;
-import static com.developerworks.lombok.MemberChecks.*;
+import static com.developerworks.lombok.eclipse.Eclipse.stringLiteral;
+import static com.developerworks.lombok.eclipse.FieldBuilder.newField;
+import static com.developerworks.lombok.eclipse.MemberChecks.*;
+import static com.developerworks.lombok.eclipse.MethodBuilder.newMethod;
 import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
 import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInField;
 import static com.developerworks.lombok.util.Names.nameOfConstantHavingPropertyName;
 import static java.lang.reflect.Modifier.*;
-import static lombok.eclipse.handlers.EclipseHandlerUtil.injectField;
+import static lombok.core.handlers.TransformationsUtil.*;
+import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
+import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccStatic;
 
 import java.beans.PropertyChangeSupport;
 import java.util.*;
@@ -32,6 +35,7 @@ import lombok.eclipse.*;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
 
+import com.developerworks.lombok.*;
 import com.developerworks.lombok.javac.JavaBeanHandler;
 
 /**
@@ -132,6 +136,31 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
   private void generateSetter(String propertyNameFieldName, GenerateBoundSetter setter, EclipseNode fieldNode) {
     AccessLevel accessLevel = setter.value();
     if (shouldStopGenerationBasedOn(accessLevel)) return;
-    
+    String setterName = toSetterName(fieldNode.getName());
+    if (methodAlreadyExists(setterName, fieldNode)) return;
+    injectMethod(fieldNode.up(), createSetterDecl(accessLevel, propertyNameFieldName, setterName, fieldNode));
+  }
+  
+  private MethodDeclaration createSetterDecl(AccessLevel accessLevel, String propertyNameFieldName, String setterName,
+      EclipseNode fieldNode) {
+    FieldDeclaration fieldDecl = (FieldDeclaration) fieldNode.get();
+    int accessModifiers = toEclipseModifier(accessLevel)| (fieldDecl.modifiers & AccStatic);
+    Annotation[] nonNulls = findAnnotations(fieldDecl, NON_NULL_PATTERN);
+    return newMethod().withModifiers(accessModifiers)
+                      .withName(setterName)
+                      .withReturnType(Eclipse.voidType(fieldNode.get()))
+                      .withParameters(parameters(nonNulls, fieldNode))
+                      .withBody(body(propertyNameFieldName, fieldNode))
+                      .buildWith(fieldNode);
+  }
+
+  private Argument[] parameters(Annotation[] nonNulls, EclipseNode fieldNode) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  private Statement[] body(String propertyNameFieldName, EclipseNode fieldNode) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -13,9 +13,9 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok;
+package com.developerworks.lombok.eclipse;
 
-import static com.developerworks.lombok.Eclipse.qualifiedTypeReference;
+import static com.developerworks.lombok.eclipse.Eclipse.qualifiedTypeReference;
 import static com.developerworks.lombok.util.Arrays.copy;
 import static lombok.eclipse.Eclipse.setGeneratedBy;
 import lombok.eclipse.EclipseNode;
