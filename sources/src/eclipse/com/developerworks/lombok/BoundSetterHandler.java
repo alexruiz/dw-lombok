@@ -14,7 +14,7 @@
  */
 package com.developerworks.lombok;
 
-import static com.developerworks.lombok.Eclipse.stringExpression;
+import static com.developerworks.lombok.Eclipse.stringLiteral;
 import static com.developerworks.lombok.FieldBuilder.newField;
 import static com.developerworks.lombok.MemberChecks.*;
 import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
@@ -120,7 +120,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
   private void generatePropertyNameConstant(String propertyNameFieldName, EclipseNode fieldNode, EclipseNode typeNode) {
     String propertyName = fieldNode.getName();
     if (fieldAlreadyExists(propertyNameFieldName, fieldNode)) return;
-    Expression propertyNameExpression = stringExpression(propertyName, typeNode.get());
+    Expression propertyNameExpression = stringLiteral(propertyName, typeNode.get());
     FieldDeclaration fieldDecl = newField().ofType(String.class) 
                                            .withName(propertyNameFieldName)
                                            .withModifiers(PUBLIC | STATIC | FINAL)

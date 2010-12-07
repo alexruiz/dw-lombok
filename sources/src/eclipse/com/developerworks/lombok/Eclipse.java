@@ -32,7 +32,7 @@ final class Eclipse {
     return (long)source.sourceStart << 32 | source.sourceEnd;
   }
 
-  static Expression stringExpression(String s, ASTNode source) {
+  static Expression stringLiteral(String s, ASTNode source) {
     StringLiteral string = new StringLiteral(s.toCharArray(), source.sourceStart, source.sourceEnd, 0);
     setGeneratedBy(string, source);
     return string;
