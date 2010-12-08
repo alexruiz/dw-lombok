@@ -15,15 +15,26 @@
 package com.developerworks.lombok.eclipse;
 
 import static lombok.core.AST.Kind.FIELD;
+import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.*;
+
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.MemberExistsResult.NOT_EXISTS;
 import lombok.eclipse.EclipseNode;
 import lombok.eclipse.handlers.EclipseHandlerUtil.MemberExistsResult;
 
+import org.eclipse.jdt.internal.compiler.ast.*;
+
 /**
  * @author Alex Ruiz
  */
 final class MemberChecks {
+  
+  static boolean isClass(EclipseNode node) {
+    ASTNode astNode = node.get();
+    if (!(astNode instanceof TypeDeclaration)) return false;
+    TypeDeclaration classDecl = (TypeDeclaration) astNode;
+    return (classDecl.modifiers & (AccInterface | AccAnnotation | AccEnum)) == 0;
+  }
 
   static boolean isField(EclipseNode node) {
     return FIELD.equals(node.getKind());

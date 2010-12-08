@@ -27,5 +27,9 @@ public final class ErrorMessages {
     return String.format("@%s is only supported on fields", annotationType.getName());
   }
   
+  public static String annotationShouldBeUsedInClass(Class<? extends Annotation> annotationType) {
+    return String.format("@%s is only supported on classes", annotationType.getName());
+  }
+
   private ErrorMessages() {}
 }

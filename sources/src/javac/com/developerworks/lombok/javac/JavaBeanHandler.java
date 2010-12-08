@@ -18,16 +18,15 @@ import static com.developerworks.lombok.javac.FieldBuilder.newField;
 import static com.developerworks.lombok.javac.JCNoType.VoidType;
 import static com.developerworks.lombok.javac.MemberChecks.*;
 import static com.developerworks.lombok.javac.MethodBuilder.newMethod;
+import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInClass;
 import static com.developerworks.lombok.util.Names.*;
 import static com.sun.tools.javac.code.Flags.*;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.beans.*;
 
 import lombok.core.AnnotationValues;
-import lombok.javac.JavacAnnotationHandler;
-import lombok.javac.JavacNode;
+import lombok.javac.*;
 
 import org.mangosdk.spi.ProviderFor;
 
@@ -39,8 +38,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.*;
-import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.*;
 
 /**
  * Generates basic support for making a class annotated with <code>{@link GenerateJavaBean}</code> a JavaBean.
@@ -101,7 +99,7 @@ public class JavaBeanHandler implements JavacAnnotationHandler<GenerateJavaBean>
     JavacNode typeNode = astWrapper.up();
     if (typeNode == null) return false;
     if (!isClass(typeNode)) {
-      astWrapper.addError(String.format("@%s is only supported on classes", TARGET_ANNOTATION_TYPE.getName()));
+      astWrapper.addError(annotationShouldBeUsedInClass(TARGET_ANNOTATION_TYPE));
       return true;
     }
     generatePropertyChangeSupportField(typeNode);

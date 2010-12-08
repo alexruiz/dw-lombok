@@ -71,6 +71,10 @@ final class Eclipse {
     return new QualifiedTypeReference(fromQualifiedName(type.getName()), new long[] { p, p, p });
   }
 
+  static Expression referenceForThis(ASTNode source) {
+    return new ThisReference(source.sourceStart(), source.sourceEnd());
+  }
+
   static Expression singleNameReference(String name, ASTNode source) {
     return singleNameReference(name.toCharArray(), source);
   }
@@ -104,5 +108,4 @@ final class Eclipse {
   }
 
   private Eclipse() {}
-
 }
