@@ -14,7 +14,7 @@
  */
 package com.developerworks.lombok.eclipse;
 
-import static lombok.DirectoryRunner.Compiler.*;
+import static lombok.DirectoryRunner.Compiler.ECJ;
 
 import java.io.File;
 
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
  * @author Alex Ruiz
  */
 @RunWith(DirectoryRunner.class)
-public class TestWithEjc implements TestParams {
+public class TestWithEcj implements TestParams {
 
   @Override public Compiler getCompiler() {
     return ECJ;
@@ -43,10 +43,10 @@ public class TestWithEjc implements TestParams {
   }
 
   @Override public File getAfterDirectory() {
-    return new File("test/transform/resource/after-ejc");
+    return new File("test/transform/resource/after-ecj");
   }
 
   @Override public File getMessagesDirectory() {
-    return new File("test/transform/resource/messages-ejc");
+    return new File("test/transform/resource/messages-ecj");
   }
 }

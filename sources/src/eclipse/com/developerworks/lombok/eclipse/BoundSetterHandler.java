@@ -30,16 +30,19 @@ import static lombok.eclipse.handlers.LombokBridge.createFieldAccessor;
 import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccStatic;
 
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.core.AnnotationValues;
-import lombok.eclipse.*;
+import lombok.eclipse.EclipseAnnotationHandler;
+import lombok.eclipse.EclipseNode;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.*;
+import com.developerworks.lombok.GenerateBoundSetter;
+import com.developerworks.lombok.GenerateJavaBean;
 import com.developerworks.lombok.javac.JavaBeanHandler;
 
 /**
@@ -94,7 +97,6 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
    */
   @Override
   public boolean handle(AnnotationValues<GenerateBoundSetter> annotation, Annotation ast, EclipseNode astWrapper) {
-    System.out.println("called");
     List<EclipseNode> fields = new ArrayList<EclipseNode>(astWrapper.upFromAnnotationToFields());
     EclipseNode mayBeField = astWrapper.up();
     if (mayBeField == null) return false;
@@ -109,7 +111,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
 
   private EclipseNode findTypeNodeFrom(EclipseNode node) {
     EclipseNode n = node;
-    while (n != null && !isTypeDeclaration(node)) n = n.up();
+    while (n != null && !isTypeDeclaration(n)) n = n.up();
     if (!isTypeDeclaration(n)) return null;
     return n;
   }

@@ -16,7 +16,7 @@ package com.developerworks.lombok.eclipse;
 
 import static lombok.core.AST.Kind.FIELD;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
-import static lombok.javac.handlers.JavacHandlerUtil.MemberExistsResult.NOT_EXISTS;
+import static lombok.eclipse.handlers.EclipseHandlerUtil.MemberExistsResult.NOT_EXISTS;
 import lombok.eclipse.EclipseNode;
 import lombok.eclipse.handlers.EclipseHandlerUtil.MemberExistsResult;
 
