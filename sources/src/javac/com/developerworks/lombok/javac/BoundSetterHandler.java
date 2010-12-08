@@ -22,7 +22,7 @@ import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationB
 import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInField;
 import static com.developerworks.lombok.util.Names.nameOfConstantHavingPropertyName;
 import static com.sun.tools.javac.code.Flags.*;
-import static lombok.core.handlers.TransformationsUtil.NON_NULL_PATTERN;
+import static lombok.core.handlers.TransformationsUtil.*;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
 import static lombok.javac.handlers.LombokBridge.createFieldAccessor;
 
@@ -148,8 +148,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
   private void generateSetter(String propertyNameFieldName, GenerateBoundSetter setter, JavacNode fieldNode) {
     AccessLevel accessLevel = setter.value();
     if (shouldStopGenerationBasedOn(accessLevel)) return;
-    JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
-    String setterName = toSetterName(fieldDecl);
+    String setterName = toSetterName(fieldNode.getName());
     if (methodAlreadyExists(setterName, fieldNode)) return;
     injectMethod(fieldNode.up(), createSetterDecl(accessLevel, propertyNameFieldName, setterName, fieldNode));
   }
@@ -163,15 +162,16 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     return newMethod().withModifiers(accessModifiers)
                       .withName(setterName)
                       .withReturnType(treeMaker.Type(VoidType()))
-                      .withParameters(List.of(parameter(nonNulls, fieldNode)))
+                      .withParameters(parameters(nonNulls, fieldNode))
                       .withBody(body(propertyNameFieldName, fieldNode))
                       .buildWith(fieldNode);
   }
 
-  private JCVariableDecl parameter(List<JCAnnotation> nonNulls, JavacNode fieldNode) {
+  private List<JCVariableDecl> parameters(List<JCAnnotation> nonNulls, JavacNode fieldNode) {
     JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
     TreeMaker treeMaker = fieldNode.getTreeMaker();
-    return treeMaker.VarDef(treeMaker.Modifiers(0, nonNulls), fieldDecl.name, fieldDecl.vartype, null);
+    JCVariableDecl param = treeMaker.VarDef(treeMaker.Modifiers(0, nonNulls), fieldDecl.name, fieldDecl.vartype, null);
+    return List.of(param);
   }
 
   private JCBlock body(String propertyNameFieldName, JavacNode fieldNode) {

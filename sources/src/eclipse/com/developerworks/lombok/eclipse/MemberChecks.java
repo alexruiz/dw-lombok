@@ -12,7 +12,7 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok;
+package com.developerworks.lombok.eclipse;
 
 import static lombok.core.AST.Kind.FIELD;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
