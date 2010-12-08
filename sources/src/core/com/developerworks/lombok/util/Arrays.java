@@ -24,6 +24,26 @@ import static java.util.Arrays.copyOf;
 public final class Arrays {
 
   /**
+   * Indicates whether the given array has elements or not.
+   * @param array the given array.
+   * @return {@code true} if the given array is not {@code null} and contains at least one element; {@code false} 
+   * otherwise.
+   */
+  public static boolean isNotEmpty(Object[] array) {
+    return array != null && array.length > 0;
+  }
+  
+  /**
+   * Convenience method for creating arrays.
+   * @param <T> the type of elements of the array.
+   * @param elements the array, in varargs form.
+   * @return the given array in varargs form.
+   */
+  public static <T> T[] array(T...elements) {
+    return elements;
+  }
+  
+  /**
    * Returns a copy of the given array.
    * @param <T> the type of the given array.
    * @param array the given array.

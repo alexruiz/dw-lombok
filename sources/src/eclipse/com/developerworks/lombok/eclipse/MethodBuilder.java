@@ -15,7 +15,7 @@
 package com.developerworks.lombok.eclipse;
 
 import static com.developerworks.lombok.eclipse.Eclipse.methodDeclaration;
-import static com.developerworks.lombok.util.Arrays.copy;
+import static com.developerworks.lombok.util.Arrays.*;
 import static lombok.eclipse.Eclipse.ECLIPSE_DO_NOT_TOUCH_FLAG;
 import lombok.eclipse.EclipseNode;
 
@@ -90,7 +90,7 @@ class MethodBuilder {
     method.bodyStart = method.declarationSourceStart = method.sourceStart;
     method.bodyEnd = method.declarationSourceEnd = method.sourceEnd;
     method.statements = body;
-    if (annotations != null && annotations.length > 0) method.annotations = annotations;
+    if (isNotEmpty(annotations)) method.annotations = annotations;
     return method;
   }
 }

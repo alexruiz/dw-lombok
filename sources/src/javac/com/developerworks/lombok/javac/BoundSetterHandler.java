@@ -20,7 +20,7 @@ import static com.developerworks.lombok.javac.MemberChecks.*;
 import static com.developerworks.lombok.javac.MethodBuilder.newMethod;
 import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
 import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInField;
-import static com.developerworks.lombok.util.Names.nameOfConstantHavingPropertyName;
+import static com.developerworks.lombok.util.Names.*;
 import static com.sun.tools.javac.code.Flags.*;
 import static lombok.core.handlers.TransformationsUtil.*;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
@@ -175,16 +175,12 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
   }
 
   private JCBlock body(String propertyNameFieldName, JavacNode fieldNode) {
-    return fieldNode.getTreeMaker().Block(0, changePropertyValueStatements(propertyNameFieldName, fieldNode));
-  }
-
-  private List<JCStatement> changePropertyValueStatements(String propertyNameFieldName, JavacNode fieldNode) {
-    Name oldValueName = fieldNode.toName("old");
+    Name oldValueName = fieldNode.toName(OLD_VALUE_VARIABLE_NAME);
     JCStatement[] statements = new JCStatement[3];
     statements[0] = oldValueVariableDecl(oldValueName, fieldNode);
     statements[1] = assignNewValueToFieldDecl(fieldNode);
     statements[2] = fireChangeEventMethodDecl(propertyNameFieldName, oldValueName, fieldNode);
-    return List.<JCStatement> from(statements);
+    return fieldNode.getTreeMaker().Block(0, List.from(statements));
   }
 
   private JCStatement oldValueVariableDecl(Name oldValueName, JavacNode fieldNode) {
@@ -204,7 +200,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
 
   private JCStatement fireChangeEventMethodDecl(String propertyNameFieldName, Name oldValueName, JavacNode fieldNode) {
     TreeMaker treeMaker = fieldNode.getTreeMaker();
-    JCExpression fn = chainDots(treeMaker, fieldNode, "propertySupport", "firePropertyChange");
+    JCExpression fn = chainDots(treeMaker, fieldNode, PROPERTY_SUPPORT_FIELD_NAME, FIRE_PROPERTY_CHANGE_METHOD_NAME);
     List<JCExpression> args = List.<JCExpression> of(treeMaker.Ident(fieldNode.toName(propertyNameFieldName)),
                                                      treeMaker.Ident(oldValueName),
                                                      createFieldAccessor(fieldNode));

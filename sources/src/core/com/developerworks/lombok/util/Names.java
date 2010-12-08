@@ -28,8 +28,14 @@ public final class Names {
   /** Name of the field of type <code>{@link PropertyChangeSupport}</code>. */
   public static final String PROPERTY_SUPPORT_FIELD_NAME = "propertySupport";
   
+  /** Name of the method "firePropertyChange" in <code>{@link PropertyChangeSupport}</code>. */
+  public static final String FIRE_PROPERTY_CHANGE_METHOD_NAME = "firePropertyChange";
+  
   /** Name of the method argument of type <code>{@link PropertyChangeListener}</code>. */
   public static final String LISTENER_ARG_NAME = "listener";
+
+  /*** Name of the variable containing the "old" value of a field before it is changed in a setter. */
+  public static final String OLD_VALUE_VARIABLE_NAME = "old";
 
   /**
    * Splits the name of the class using "\." as the regular expression.. For example, {@code java.lang.String} will be

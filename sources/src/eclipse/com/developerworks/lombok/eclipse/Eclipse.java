@@ -17,6 +17,7 @@ package com.developerworks.lombok.eclipse;
 import static com.developerworks.lombok.eclipse.MemberChecks.isField;
 import static lombok.eclipse.Eclipse.*;
 import static org.eclipse.jdt.internal.compiler.ast.TypeReference.baseTypeReference;
+import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccFinal;
 import static org.eclipse.jdt.internal.compiler.lookup.TypeIds.T_void;
 import lombok.eclipse.EclipseNode;
 
@@ -28,26 +29,77 @@ import org.eclipse.jdt.internal.compiler.ast.*;
  */
 final class Eclipse {
 
-  static TypeReference qualifiedTypeReference(Class<?> type, ASTNode source) {
-    long p = posNom(source);
-    return new QualifiedTypeReference(fromQualifiedName(type.getName()), new long[] { p, p, p });
+  static Argument argument(char[] name, TypeReference tr, int modifiers, ASTNode source) {
+    Argument argument = new Argument(name, posNom(source), tr, modifiers);
+    copySourceStartAndEnt(source, argument);
+    setGeneratedBy(argument, source);
+    return argument;
   }
 
-  private static long posNom(ASTNode source) {
-    return (long)source.sourceStart << 32 | source.sourceEnd;
+  static Assignment assignment(Expression lhs, Expression expression, ASTNode source) {
+    Assignment assignment = new Assignment(lhs, expression, (int)posNom(source));
+    copySourceStartAndEnt(source, assignment);
+    setGeneratedBy(assignment, source);
+    return assignment;
   }
 
-  static Expression stringLiteral(String s, ASTNode source) {
-    StringLiteral string = new StringLiteral(s.toCharArray(), source.sourceStart, source.sourceEnd, 0);
-    setGeneratedBy(string, source);
-    return string;
+  static LocalDeclaration localDeclaration(char[] name, TypeReference type, Expression initializer, EclipseNode node) {
+    ASTNode source = node.get();
+    LocalDeclaration decl = new LocalDeclaration(name, source.sourceStart, source.sourceEnd);
+    decl.modifiers |= AccFinal;
+    setGeneratedBy(decl, source);
+    decl.type = copyType(type, source);
+    setGeneratedBy(decl.type, source);
+    decl.initialization = initializer;
+    setGeneratedBy(decl.initialization, source);
+    return decl;
   }
 
+  static MessageSend messageSend(ASTNode source) {
+    MessageSend messageSend = new MessageSend();
+    copySourceStartAndEnt(source, messageSend);
+    setGeneratedBy(messageSend, source);
+    return messageSend;
+  }
+  
   static MethodDeclaration methodDeclaration(CompilationResult compilationResult, ASTNode source) {
     MethodDeclaration method = new MethodDeclaration(compilationResult);
     copySourceStartAndEnt(source, method);
     setGeneratedBy(method, source);
     return method;
+  }
+
+  static TypeDeclaration parentOf(EclipseNode node) {
+    if (isField(node)) return (TypeDeclaration) node.up().get();
+    for (EclipseNode child : node.down())
+      if (isField(child)) return parentOf(child);
+    return null;
+  }
+
+  static TypeReference qualifiedTypeReference(Class<?> type, ASTNode source) {
+    long p = posNom(source);
+    return new QualifiedTypeReference(fromQualifiedName(type.getName()), new long[] { p, p, p });
+  }
+
+  static Expression singleNameReference(String name, ASTNode source) {
+    return singleNameReference(name.toCharArray(), source);
+  }
+
+  static Expression singleNameReference(char[] name, ASTNode source) {
+    long pos = posNom(source);
+    SingleNameReference ref = new SingleNameReference(name, pos);
+    setGeneratedBy(ref, source);
+    return ref;
+  }
+
+  private static long posNom(ASTNode source) {
+    return (long) source.sourceStart << 32 | source.sourceEnd;
+  }
+  
+  static Expression stringLiteral(String s, ASTNode source) {
+    StringLiteral string = new StringLiteral(s.toCharArray(), source.sourceStart, source.sourceEnd, 0);
+    setGeneratedBy(string, source);
+    return string;
   }
 
   static TypeReference voidType(ASTNode source) {
@@ -60,13 +112,7 @@ final class Eclipse {
     to.sourceStart = from.sourceStart;
     to.sourceEnd = from.sourceEnd;
   }
-
-  static TypeDeclaration parentOf(EclipseNode node) {
-    if (isField(node)) return (TypeDeclaration) node.up().get();
-    for (EclipseNode child : node.down())
-      if (isField(child)) return parentOf(child);
-    return null;
-  }
-
+  
   private Eclipse() {}
+
 }

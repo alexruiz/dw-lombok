@@ -14,34 +14,34 @@
  */
 package com.developerworks.lombok.eclipse;
 
-import static com.developerworks.lombok.eclipse.Eclipse.stringLiteral;
+import static com.developerworks.lombok.eclipse.Eclipse.*;
 import static com.developerworks.lombok.eclipse.FieldBuilder.newField;
 import static com.developerworks.lombok.eclipse.MemberChecks.*;
 import static com.developerworks.lombok.eclipse.MethodBuilder.newMethod;
+import static com.developerworks.lombok.util.Arrays.*;
 import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
 import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInField;
-import static com.developerworks.lombok.util.Names.nameOfConstantHavingPropertyName;
+import static com.developerworks.lombok.util.Names.*;
 import static java.lang.reflect.Modifier.*;
 import static lombok.core.handlers.TransformationsUtil.*;
+import static lombok.eclipse.Eclipse.*;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
+import static lombok.eclipse.handlers.LombokBridge.createFieldAccessor;
 import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccStatic;
 
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import lombok.AccessLevel;
 import lombok.core.AnnotationValues;
-import lombok.eclipse.EclipseAnnotationHandler;
-import lombok.eclipse.EclipseNode;
+import lombok.eclipse.*;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
+import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.GenerateBoundSetter;
-import com.developerworks.lombok.GenerateJavaBean;
+import com.developerworks.lombok.*;
 import com.developerworks.lombok.javac.JavaBeanHandler;
 
-/**
 /**
  * Generates a "bound" setter for a field annotated with <code>{@link GenerateBoundSetter}</code>.
  * <p>
@@ -79,6 +79,7 @@ import com.developerworks.lombok.javac.JavaBeanHandler;
  *
  * @author Alex Ruiz
  */
+@ProviderFor(EclipseAnnotationHandler.class)
 public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoundSetter> {
 
   private static final Class<GenerateBoundSetter> TARGET_ANNOTATION_TYPE = GenerateBoundSetter.class;
@@ -93,6 +94,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
    */
   @Override
   public boolean handle(AnnotationValues<GenerateBoundSetter> annotation, Annotation ast, EclipseNode astWrapper) {
+    System.out.println("called");
     List<EclipseNode> fields = new ArrayList<EclipseNode>(astWrapper.upFromAnnotationToFields());
     EclipseNode mayBeField = astWrapper.up();
     if (mayBeField == null) return false;
@@ -151,19 +153,53 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
     Annotation[] nonNulls = findAnnotations(fieldDecl, NON_NULL_PATTERN);
     return newMethod().withModifiers(accessModifiers)
                       .withName(setterName)
-                      .withReturnType(Eclipse.voidType(fieldNode.get()))
+                      .withReturnType(voidType(fieldNode.get()))
                       .withParameters(parameters(nonNulls, fieldNode))
                       .withBody(body(propertyNameFieldName, fieldNode))
                       .buildWith(fieldNode);
   }
 
   private Argument[] parameters(Annotation[] nonNulls, EclipseNode fieldNode) {
-    // TODO Auto-generated method stub
-    return null;
+    FieldDeclaration fieldDecl = (FieldDeclaration) fieldNode.get();
+    ASTNode source = fieldNode.get();
+    Argument param = argument(fieldDecl.name, copyType(fieldDecl.type, source), 0, source);
+    Annotation[] copied = copyAnnotations(source, nonNulls);
+    if (isNotEmpty(copied)) param.annotations = copied;
+    return array(param);
   }
 
   private Statement[] body(String propertyNameFieldName, EclipseNode fieldNode) {
-    // TODO Auto-generated method stub
-    return null;
+    char[] oldValueName = OLD_VALUE_VARIABLE_NAME.toCharArray();
+    Statement[] statements = new Statement[3];
+    statements[0] = oldValueVariableDecl(oldValueName, fieldNode);
+    statements[1] = assignNewValueToFieldDecl(fieldNode);
+    statements[2] = fireChangeEventMethodDecl(propertyNameFieldName, oldValueName, fieldNode);
+    return statements;
+  }
+
+  private Statement oldValueVariableDecl(char[] oldValueName, EclipseNode fieldNode) {
+    FieldDeclaration varDecl = (FieldDeclaration) fieldNode.get();
+    Expression fieldRef = createFieldAccessor(fieldNode);
+    return localDeclaration(oldValueName, varDecl.type, fieldRef, fieldNode);
+  }
+
+  private Statement assignNewValueToFieldDecl(EclipseNode fieldNode) {
+    ASTNode source = fieldNode.get();
+    Expression fieldRef = createFieldAccessor(fieldNode);
+    Expression name = singleNameReference(fieldNode.getName(), source);
+    return assignment(fieldRef, name, source);
+  }
+
+  private Statement fireChangeEventMethodDecl(String propertyNameFieldName, char[] oldValueName, EclipseNode fieldNode) {
+    ASTNode source = fieldNode.get();
+    MessageSend fn = messageSend(source);
+    fn.receiver = singleNameReference(PROPERTY_SUPPORT_FIELD_NAME, source);
+    fn.selector = FIRE_PROPERTY_CHANGE_METHOD_NAME.toCharArray();
+    List<Expression> arguments = new ArrayList<Expression>();
+    arguments.add(singleNameReference(propertyNameFieldName, source));
+    arguments.add(singleNameReference(oldValueName, source));
+    arguments.add(createFieldAccessor(fieldNode));
+    fn.arguments = arguments.toArray(new Expression[arguments.size()]);
+    return fn;
   }
 }

@@ -97,7 +97,6 @@ public class JavaBeanHandler implements JavacAnnotationHandler<GenerateJavaBean>
    */
   @Override
   public boolean handle(AnnotationValues<GenerateJavaBean> annotation, JCAnnotation ast, JavacNode astWrapper) {
-    System.out.println("called");
     markAnnotationAsProcessed(astWrapper, TARGET_ANNOTATION_TYPE);
     JavacNode typeNode = astWrapper.up();
     if (typeNode == null) return false;
