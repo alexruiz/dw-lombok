@@ -25,7 +25,9 @@ final class Eclipse {
 
   static TypeReference qualifiedTypeReference(Class<?> type, ASTNode source) {
     long p = posNom(source);
-    return new QualifiedTypeReference(fromQualifiedName(type.getName()), new long[] { p, p, p });
+    QualifiedTypeReference ref = new QualifiedTypeReference(fromQualifiedName(type.getName()), new long[] { p, p, p });
+    setGeneratedBy(ref, source);
+    return ref;
   }
 
   private static long posNom(ASTNode source) {
@@ -33,9 +35,9 @@ final class Eclipse {
   }
 
   static Expression stringLiteral(String s, ASTNode source) {
-    StringLiteral string = new StringLiteral(s.toCharArray(), source.sourceStart, source.sourceEnd, 0);
-    setGeneratedBy(string, source);
-    return string;
+    StringLiteral lit = new StringLiteral(s.toCharArray(), source.sourceStart, source.sourceEnd, 0);
+    setGeneratedBy(lit, source);
+    return lit;
   }
 
   private Eclipse() {}

@@ -39,7 +39,7 @@ final class FieldBuilder {
   private String name;
   private int modifiers;
   private Expression[] args = NO_ARGS;
-  
+
   FieldBuilder ofType(Class<?> newType) {
     type = newType;
     return this;
@@ -49,12 +49,12 @@ final class FieldBuilder {
     name = newName;
     return this;
   }
-  
+
   FieldBuilder withModifiers(int newModifiers) {
     modifiers = newModifiers;
     return this;
   }
-  
+
   FieldBuilder withArgs(Expression...newArgs) {
     args = copy(newArgs);
     return this;
@@ -67,11 +67,9 @@ final class FieldBuilder {
     fieldDecl.declarationSourceEnd = -1;
     fieldDecl.modifiers = modifiers;
     fieldDecl.type = qualifiedTypeReference(type, source);
-    setGeneratedBy(fieldDecl.type, source);
     AllocationExpression init = new AllocationExpression();
     setGeneratedBy(init, source);
     init.type = qualifiedTypeReference(type, source);
-    setGeneratedBy(init.type, source);
     init.arguments = args;
     fieldDecl.initialization = init;
     return fieldDecl;
