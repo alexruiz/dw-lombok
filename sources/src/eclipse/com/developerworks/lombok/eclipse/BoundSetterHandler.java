@@ -27,15 +27,18 @@ import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
 import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccStatic;
 
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.core.AnnotationValues;
-import lombok.eclipse.*;
+import lombok.eclipse.EclipseAnnotationHandler;
+import lombok.eclipse.EclipseNode;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
 
-import com.developerworks.lombok.*;
+import com.developerworks.lombok.GenerateBoundSetter;
+import com.developerworks.lombok.GenerateJavaBean;
 import com.developerworks.lombok.javac.JavaBeanHandler;
 
 /**
@@ -84,11 +87,11 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
    * Called when an annotation is found that is likely to match <code>{@link GenerateBoundSetter}</code>. This is were
    * AST node generation happens.
    * @param annotation the actual annotation.
-   * @param ast the javac AST node representing the annotation.
+   * @param ast the Eclipse AST node representing the annotation.
    * @param astWrapper the lombok AST wrapper around {@code ast}.
    * @return {@code true} if this handler successfully handled {@code GenerateBoundSetter}; {@code false} otherwise.
    */
-  @Override 
+  @Override
   public boolean handle(AnnotationValues<GenerateBoundSetter> annotation, Annotation ast, EclipseNode astWrapper) {
     List<EclipseNode> fields = new ArrayList<EclipseNode>(astWrapper.upFromAnnotationToFields());
     EclipseNode mayBeField = astWrapper.up();
@@ -125,7 +128,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
     String propertyName = fieldNode.getName();
     if (fieldAlreadyExists(propertyNameFieldName, fieldNode)) return;
     Expression propertyNameExpression = stringLiteral(propertyName, typeNode.get());
-    FieldDeclaration fieldDecl = newField().ofType(String.class) 
+    FieldDeclaration fieldDecl = newField().ofType(String.class)
                                            .withName(propertyNameFieldName)
                                            .withModifiers(PUBLIC | STATIC | FINAL)
                                            .withArgs(propertyNameExpression)
@@ -140,7 +143,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
     if (methodAlreadyExists(setterName, fieldNode)) return;
     injectMethod(fieldNode.up(), createSetterDecl(accessLevel, propertyNameFieldName, setterName, fieldNode));
   }
-  
+
   private MethodDeclaration createSetterDecl(AccessLevel accessLevel, String propertyNameFieldName, String setterName,
       EclipseNode fieldNode) {
     FieldDeclaration fieldDecl = (FieldDeclaration) fieldNode.get();
