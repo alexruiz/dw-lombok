@@ -15,6 +15,7 @@
 package com.developerworks.lombok.eclipse;
 
 import static com.developerworks.lombok.eclipse.Eclipse.methodDeclaration;
+import static com.developerworks.lombok.eclipse.MemberChecks.isField;
 import static com.developerworks.lombok.util.Arrays.*;
 import static lombok.eclipse.Eclipse.ECLIPSE_DO_NOT_TOUCH_FLAG;
 import lombok.eclipse.EclipseNode;
@@ -23,7 +24,7 @@ import org.eclipse.jdt.internal.compiler.ast.*;
 
 /**
  * Simplifies creation of methods.
- * 
+ *
  * @author Alex Ruiz
  */
 class MethodBuilder {
@@ -78,7 +79,7 @@ class MethodBuilder {
   }
 
   MethodDeclaration buildWith(EclipseNode node) {
-    TypeDeclaration parent = Eclipse.parentOf(node);
+    TypeDeclaration parent = parentOf(node);
     ASTNode source = node.get();
     MethodDeclaration method = methodDeclaration(parent.compilationResult, source);
     method.modifiers = modifiers;
@@ -92,5 +93,12 @@ class MethodBuilder {
     method.statements = body;
     if (isNotEmpty(annotations)) method.annotations = annotations;
     return method;
+  }
+
+  private TypeDeclaration parentOf(EclipseNode node) {
+    if (isField(node)) return (TypeDeclaration) node.up().get();
+    for (EclipseNode child : node.down())
+      if (isField(child)) return parentOf(child);
+    throw new IllegalStateException(String.format("Unable to find type declaration for %s", node));
   }
 }

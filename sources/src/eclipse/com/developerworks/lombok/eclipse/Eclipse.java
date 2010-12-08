@@ -14,12 +14,10 @@
  */
 package com.developerworks.lombok.eclipse;
 
-import static com.developerworks.lombok.eclipse.MemberChecks.isField;
 import static lombok.eclipse.Eclipse.*;
 import static org.eclipse.jdt.internal.compiler.ast.TypeReference.baseTypeReference;
 import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccFinal;
 import static org.eclipse.jdt.internal.compiler.lookup.TypeIds.T_void;
-import lombok.eclipse.EclipseNode;
 
 import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.ast.*;
@@ -43,8 +41,7 @@ final class Eclipse {
     return assignment;
   }
 
-  static LocalDeclaration localDeclaration(char[] name, TypeReference type, Expression initializer, EclipseNode node) {
-    ASTNode source = node.get();
+  static LocalDeclaration localDeclaration(char[] name, TypeReference type, Expression initializer, ASTNode source) {
     LocalDeclaration decl = new LocalDeclaration(name, source.sourceStart, source.sourceEnd);
     decl.modifiers |= AccFinal;
     setGeneratedBy(decl, source);
@@ -61,19 +58,12 @@ final class Eclipse {
     setGeneratedBy(messageSend, source);
     return messageSend;
   }
-  
+
   static MethodDeclaration methodDeclaration(CompilationResult compilationResult, ASTNode source) {
     MethodDeclaration method = new MethodDeclaration(compilationResult);
     copySourceStartAndEnt(source, method);
     setGeneratedBy(method, source);
     return method;
-  }
-
-  static TypeDeclaration parentOf(EclipseNode node) {
-    if (isField(node)) return (TypeDeclaration) node.up().get();
-    for (EclipseNode child : node.down())
-      if (isField(child)) return parentOf(child);
-    return null;
   }
 
   static TypeReference qualifiedTypeReference(Class<?> type, ASTNode source) {
@@ -95,7 +85,7 @@ final class Eclipse {
   private static long posNom(ASTNode source) {
     return (long) source.sourceStart << 32 | source.sourceEnd;
   }
-  
+
   static Expression stringLiteral(String s, ASTNode source) {
     StringLiteral string = new StringLiteral(s.toCharArray(), source.sourceStart, source.sourceEnd, 0);
     setGeneratedBy(string, source);
@@ -112,7 +102,7 @@ final class Eclipse {
     to.sourceStart = from.sourceStart;
     to.sourceEnd = from.sourceEnd;
   }
-  
+
   private Eclipse() {}
 
 }

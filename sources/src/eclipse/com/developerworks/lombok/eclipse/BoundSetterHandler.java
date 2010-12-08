@@ -129,6 +129,8 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
   }
 
   private void generatePropertyNameConstant(String propertyNameFieldName, EclipseNode fieldNode, EclipseNode typeNode) {
+    // generates:
+    // public static final String PROP_FIRST_NAME = "firstName";
     String propertyName = fieldNode.getName();
     if (fieldAlreadyExists(propertyNameFieldName, fieldNode)) return;
     Expression propertyNameExpression = stringLiteral(propertyName, typeNode.get());
@@ -150,6 +152,11 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
 
   private MethodDeclaration createSetterDecl(AccessLevel accessLevel, String propertyNameFieldName, String setterName,
       EclipseNode fieldNode) {
+    // public void setFirstName(String value) {
+    //   final String oldValue = firstName;
+    //   firstName = value;
+    //   propertySupport.firePropertyChange(PROP_FIRST_NAME, oldValue, firstName);
+    // }
     FieldDeclaration fieldDecl = (FieldDeclaration) fieldNode.get();
     int accessModifiers = toEclipseModifier(accessLevel)| (fieldDecl.modifiers & AccStatic);
     Annotation[] nonNulls = findAnnotations(fieldDecl, NON_NULL_PATTERN);
@@ -182,7 +189,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
   private Statement oldValueVariableDecl(char[] oldValueName, EclipseNode fieldNode) {
     FieldDeclaration varDecl = (FieldDeclaration) fieldNode.get();
     Expression fieldRef = createFieldAccessor(fieldNode);
-    return localDeclaration(oldValueName, varDecl.type, fieldRef, fieldNode);
+    return localDeclaration(oldValueName, varDecl.type, fieldRef, fieldNode.get());
   }
 
   private Statement assignNewValueToFieldDecl(EclipseNode fieldNode) {

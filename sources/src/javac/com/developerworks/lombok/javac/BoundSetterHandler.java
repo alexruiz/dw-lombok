@@ -31,11 +31,13 @@ import java.util.Collection;
 
 import lombok.AccessLevel;
 import lombok.core.AnnotationValues;
-import lombok.javac.*;
+import lombok.javac.JavacAnnotationHandler;
+import lombok.javac.JavacNode;
 
 import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.*;
+import com.developerworks.lombok.GenerateBoundSetter;
+import com.developerworks.lombok.GenerateJavaBean;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
@@ -46,7 +48,8 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.*;
-import com.sun.tools.javac.util.*;
+import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Name;
 
 /**
  * Generates a "bound" setter for a field annotated with <code>{@link GenerateBoundSetter}</code>.
@@ -134,6 +137,8 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
   }
 
   private void generatePropertyNameConstant(String propertyNameFieldName, JavacNode fieldNode, JavacNode typeNode) {
+    // generates:
+    // public static final String PROP_FIRST_NAME = "firstName";
     String propertyName = fieldNode.getName();
     if (fieldAlreadyExists(propertyNameFieldName, fieldNode)) return;
     JCExpression propertyNameExpression = fieldNode.getTreeMaker().Literal(propertyName);
@@ -155,6 +160,11 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
 
   private JCMethodDecl createSetterDecl(AccessLevel accessLevel, String propertyNameFieldName, String setterName,
       JavacNode fieldNode) {
+    // public void setFirstName(String value) {
+    //   final String oldValue = firstName;
+    //   firstName = value;
+    //   propertySupport.firePropertyChange(PROP_FIRST_NAME, oldValue, firstName);
+    // }
     JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
     long accessModifiers = toJavacModifier(accessLevel) | (fieldDecl.mods.flags & STATIC);
     TreeMaker treeMaker = fieldNode.getTreeMaker();
