@@ -81,6 +81,10 @@ final class Eclipse {
 
   static Expression singleNameReference(char[] name, ASTNode source) {
     long pos = posNom(source);
+    return singleNameReference(name, source, pos);
+  }
+
+  static Expression singleNameReference(char[] name, ASTNode source, long pos) {
     SingleNameReference ref = new SingleNameReference(name, pos);
     setGeneratedBy(ref, source);
     return ref;

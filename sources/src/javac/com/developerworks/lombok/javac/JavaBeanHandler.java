@@ -119,25 +119,26 @@ public class JavaBeanHandler implements JavacAnnotationHandler<GenerateJavaBean>
   }
 
   private void generateChangeListenerMethods(JavacNode typeNode) {
-    generateChangeListenerMethod("addPropertyChangeListener", typeNode);
-    generateChangeListenerMethod("removePropertyChangeListener", typeNode);
+    for (String methodName : PROPERTY_CHANGE_METHOD_NAMES)
+      generateChangeListenerMethod(methodName, typeNode);
   }
 
   private void generateChangeListenerMethod(String methodName, JavacNode typeNode) {
     TreeMaker treeMaker = typeNode.getTreeMaker();
-    JCMethodDecl method = newMethod().withModifiers(PUBLIC)
-                                     .withName(methodName)
-                                     .withReturnType(treeMaker.Type(VoidType()))
-                                     .withParameters(List.of(parameter(typeNode)))
-                                     .withBody(body(methodName, typeNode))
-                                     .buildWith(typeNode);
-    injectMethod(typeNode, method);
+    JCMethodDecl methodDecl = newMethod().withModifiers(PUBLIC)
+                                         .withName(methodName)
+                                         .withReturnType(treeMaker.Type(VoidType()))
+                                         .withParameters(parameters(typeNode))
+                                         .withBody(body(methodName, typeNode))
+                                         .buildWith(typeNode);
+    injectMethod(typeNode, methodDecl);
   }
 
-  private JCVariableDecl parameter(JavacNode typeNode) {
+  private List<JCVariableDecl> parameters(JavacNode typeNode) {
     TreeMaker treeMaker = typeNode.getTreeMaker();
     JCExpression type = chainDots(treeMaker, typeNode, splitNameOf(PropertyChangeListener.class));
-    return treeMaker.VarDef(treeMaker.Modifiers(FINAL), listenerArgName(typeNode), type, null);
+    JCVariableDecl parameter = treeMaker.VarDef(treeMaker.Modifiers(FINAL), listenerArgName(typeNode), type, null);
+    return List.of(parameter);
   }
 
   private JCBlock body(String methodName, JavacNode typeNode) {

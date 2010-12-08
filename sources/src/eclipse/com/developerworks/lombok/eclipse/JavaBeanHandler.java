@@ -14,20 +14,23 @@
  */
 package com.developerworks.lombok.eclipse;
 
-import static com.developerworks.lombok.eclipse.Eclipse.referenceForThis;
+import static com.developerworks.lombok.eclipse.Eclipse.*;
 import static com.developerworks.lombok.eclipse.FieldBuilder.newField;
 import static com.developerworks.lombok.eclipse.MemberChecks.*;
+import static com.developerworks.lombok.eclipse.MethodBuilder.newMethod;
+import static com.developerworks.lombok.util.Arrays.array;
 import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInClass;
-import static com.developerworks.lombok.util.Names.PROPERTY_SUPPORT_FIELD_NAME;
+import static com.developerworks.lombok.util.Names.*;
 import static java.lang.reflect.Modifier.*;
-import static lombok.eclipse.handlers.EclipseHandlerUtil.injectField;
+import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
 
-import java.beans.PropertyChangeSupport;
+import java.beans.*;
 
 import lombok.core.AnnotationValues;
 import lombok.eclipse.*;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
+import org.eclipse.jdt.internal.compiler.ast.Statement;
 import org.mangosdk.spi.ProviderFor;
 
 import com.developerworks.lombok.GenerateJavaBean;
@@ -109,7 +112,37 @@ public class JavaBeanHandler implements EclipseAnnotationHandler<GenerateJavaBea
   }
 
   private void generateChangeListenerMethods(EclipseNode typeNode) {
-    // TODO Auto-generated method stub
-    
+    for (String methodName : PROPERTY_CHANGE_METHOD_NAMES)
+      generateChangeListenerMethod(methodName, typeNode);
+  }
+
+  private void generateChangeListenerMethod(String methodName, EclipseNode typeNode) {
+    MethodDeclaration methodDecl = newMethod().withModifiers(PUBLIC)
+                                              .withName(methodName)
+                                              .withReturnType(voidType(typeNode.get()))
+                                              .withParameters(parameters(typeNode))
+                                              .withBody(body(methodName, typeNode))
+                                              .buildWith(typeNode);
+    injectMethod(typeNode, methodDecl);
+  }
+
+  private Argument[] parameters(EclipseNode typeNode) {
+    ASTNode source = typeNode.get();
+    TypeReference type = qualifiedTypeReference(PropertyChangeListener.class, source);
+    Argument parameter = argument(LISTENER_ARG_NAME.toCharArray(), type, FINAL, source);
+    return array(parameter);
+  }
+
+  private Statement[] body(String methodName, EclipseNode typeNode) {
+    return array(delegateToPropertySupport(methodName, typeNode));
+  }
+  
+  private Statement delegateToPropertySupport(String methodName, EclipseNode typeNode) {
+    ASTNode source = typeNode.get();
+    MessageSend fn = messageSend(source);
+    fn.receiver = singleNameReference(PROPERTY_SUPPORT_FIELD_NAME.toCharArray(), source, 0);
+    fn.selector = methodName.toCharArray();
+    fn.arguments = array(singleNameReference(LISTENER_ARG_NAME, source));
+    return fn;
   }
 }

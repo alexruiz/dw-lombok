@@ -14,6 +14,7 @@
  */
 package com.developerworks.lombok.util;
 
+import static com.developerworks.lombok.util.Arrays.array;
 import static java.lang.Character.*;
 
 import java.beans.*;
@@ -37,6 +38,10 @@ public final class Names {
   /*** Name of the variable containing the "old" value of a field before it is changed in a setter. */
   public static final String OLD_VALUE_VARIABLE_NAME = "old";
 
+  /** Names of the "*PropertyChangeListener" methods <code>{@link PropertyChangeSupport}</code>. */
+  public static final String[] PROPERTY_CHANGE_METHOD_NAMES = array("addPropertyChangeListener",
+      "removePropertyChangeListener");
+  
   /**
    * Splits the name of the class using "\." as the regular expression.. For example, {@code java.lang.String} will be
    * split into { "java", "lang", "String" }.

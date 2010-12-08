@@ -11,6 +11,12 @@ import com.developerworks.lombok.GenerateBoundSetter;
     this.i = i;
     propertySupport.firePropertyChange(PROP_I, old, this.i);
   }
+  public @java.lang.SuppressWarnings("all") void addPropertyChangeListener(final java.beans.PropertyChangeListener listener) {
+    propertySupport.addPropertyChangeListener(listener);
+  }
+  public @java.lang.SuppressWarnings("all") void removePropertyChangeListener(final java.beans.PropertyChangeListener listener) {
+    propertySupport.removePropertyChangeListener(listener);
+  }
   SetterOnMethod() {
     super();
   }
