@@ -56,9 +56,9 @@ final class Eclipse {
     return type;
   }
 
-  private static void copySourceStartAndEnt(ASTNode src, ASTNode dest) {
-    dest.sourceStart = src.sourceStart;
-    dest.sourceEnd = src.sourceEnd;
+  private static void copySourceStartAndEnt(ASTNode from, ASTNode to) {
+    to.sourceStart = from.sourceStart;
+    to.sourceEnd = from.sourceEnd;
   }
 
   static TypeDeclaration parentOf(EclipseNode node) {
