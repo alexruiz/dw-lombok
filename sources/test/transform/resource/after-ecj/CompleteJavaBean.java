@@ -1,5 +1,5 @@
-import com.developerworks.lombok.GenerateJavaBean;
-import com.developerworks.lombok.GenerateBoundSetter;
+import lombok.GenerateJavaBean;
+import lombok.GenerateBoundSetter;
 @GenerateJavaBean class CompleteJavaBean {
   private final java.beans.PropertyChangeSupport propertySupport = new java.beans.PropertyChangeSupport(this);
   public static final java.lang.String PROP_I = "i";

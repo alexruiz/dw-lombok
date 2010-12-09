@@ -1,7 +1,7 @@
 import lombok.AccessLevel;
 
-import com.developerworks.lombok.GenerateJavaBean;
-import com.developerworks.lombok.GenerateBoundSetter;
+import lombok.GenerateJavaBean;
+import lombok.GenerateBoundSetter;
 
 @GenerateJavaBean
 class SimpleJavaBean {

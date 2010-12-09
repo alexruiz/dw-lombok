@@ -1,4 +1,4 @@
-import com.developerworks.lombok.GenerateJavaBean;
+import lombok.GenerateJavaBean;
 
 class GenerateJavaBeanNotInClass {
   @GenerateJavaBean private int i;
