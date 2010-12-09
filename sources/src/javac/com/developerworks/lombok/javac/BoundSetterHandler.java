@@ -15,7 +15,7 @@
 package com.developerworks.lombok.javac;
 
 import static com.developerworks.lombok.javac.FieldBuilder.newField;
-import static com.developerworks.lombok.javac.JCNoType.VoidType;
+import static com.developerworks.lombok.javac.JCNoType.voidType;
 import static com.developerworks.lombok.javac.MemberChecks.*;
 import static com.developerworks.lombok.javac.MethodBuilder.newMethod;
 import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
@@ -171,7 +171,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     List<JCAnnotation> nonNulls = findAnnotations(fieldNode, NON_NULL_PATTERN);
     return newMethod().withModifiers(accessModifiers)
                       .withName(setterName)
-                      .withReturnType(treeMaker.Type(VoidType()))
+                      .withReturnType(treeMaker.Type(voidType()))
                       .withParameters(parameters(nonNulls, fieldNode))
                       .withBody(body(propertyNameFieldName, fieldNode))
                       .buildWith(fieldNode);

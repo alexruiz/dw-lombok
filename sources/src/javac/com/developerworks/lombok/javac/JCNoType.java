@@ -27,7 +27,7 @@ import com.sun.tools.javac.code.Type;
  */
 class JCNoType extends Type implements NoType {
 
-  static JCNoType VoidType() {
+  static JCNoType voidType() {
     return new JCNoType(VOID);
   }
 
