@@ -17,7 +17,8 @@ package com.developerworks.lombok.util;
 import static com.developerworks.lombok.util.Arrays.array;
 import static java.lang.Character.*;
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Utility methods related to names.
@@ -28,22 +29,22 @@ public final class Names {
 
   /** Name of the field of type <code>{@link PropertyChangeSupport}</code>. */
   public static final String PROPERTY_SUPPORT_FIELD_NAME = "propertySupport";
-  
+
   /** Name of the method "firePropertyChange" in <code>{@link PropertyChangeSupport}</code>. */
   public static final String FIRE_PROPERTY_CHANGE_METHOD_NAME = "firePropertyChange";
-  
+
   /** Name of the method argument of type <code>{@link PropertyChangeListener}</code>. */
   public static final String LISTENER_ARG_NAME = "listener";
 
   /*** Name of the variable containing the "old" value of a field before it is changed in a setter. */
   public static final String OLD_VALUE_VARIABLE_NAME = "old";
 
-  /** Names of the "*PropertyChangeListener" methods <code>{@link PropertyChangeSupport}</code>. */
+  /** Names of the "*PropertyChangeListener" methods in <code>{@link PropertyChangeSupport}</code>. */
   public static final String[] PROPERTY_CHANGE_METHOD_NAMES = array("addPropertyChangeListener",
       "removePropertyChangeListener");
-  
+
   /**
-   * Splits the name of the class using "\." as the regular expression.. For example, {@code java.lang.String} will be
+   * Splits the name of the class using "\." as the regular expression. For example, {@code java.lang.String} will be
    * split into { "java", "lang", "String" }.
    * @param type the given class.
    * @return the name of the type split using "\." as the regular expression.
@@ -66,11 +67,11 @@ public final class Names {
     for (int i = 0; i < charCount; i++) {
       char c = chars[i];
       if (isUpperCase(c) && i > 0) b.append('_');
-      if (isLowerCase(c)) c = toUpperCase(c); 
+      if (isLowerCase(c)) c = toUpperCase(c);
       b.append(c);
     }
     return b.toString();
   }
-  
+
   private Names() {}
 }
