@@ -12,7 +12,7 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.javac;
+package lombok.javac.handlers;
 
 import static com.sun.tools.javac.util.List.nil;
 import lombok.javac.JavacNode;

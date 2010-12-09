@@ -1,5 +1,5 @@
 /*
- * Created on Dec 6, 2010
+ * Created on Dec 8, 2010
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,24 +12,29 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.util;
+package lombok.core.util;
 
-import java.lang.annotation.Annotation;
+import static org.fest.assertions.Assertions.assertThat;
+import lombok.core.util.Arrays;
+
+import org.junit.Test;
 
 /**
- * Common error messages.
+ * Tests for <code>{@link Arrays#isNotEmpty(Object[])}</code>.
  *
  * @author Alex Ruiz
  */
-public final class ErrorMessages {
+public class Arrays_isNotEmpty_Test {
 
-  public static String annotationShouldBeUsedInField(Class<? extends Annotation> annotationType) {
-    return String.format("@%s is only supported on fields", annotationType.getName());
-  }
-  
-  public static String annotationShouldBeUsedInClass(Class<? extends Annotation> annotationType) {
-    return String.format("@%s is only supported on classes", annotationType.getName());
+  @Test public void should_return_false_if_array_is_null() {
+    assertThat(Arrays.isNotEmpty(null)).isFalse();
   }
 
-  private ErrorMessages() {}
+  @Test public void should_return_false_if_array_is_empty() {
+    assertThat(Arrays.isNotEmpty(new Object[0])).isFalse();
+  }
+
+  @Test public void should_return_true_if_array_is_not_empty() {
+    assertThat(Arrays.isNotEmpty(new Object[] { "Yoda" })).isTrue();
+  }
 }

@@ -12,20 +12,21 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.eclipse;
+package lombok.eclipse.handlers;
 
-import static com.developerworks.lombok.eclipse.Eclipse.*;
-import static com.developerworks.lombok.eclipse.FieldBuilder.newField;
-import static com.developerworks.lombok.eclipse.MemberChecks.*;
-import static com.developerworks.lombok.eclipse.MethodBuilder.newMethod;
-import static com.developerworks.lombok.util.Arrays.array;
-import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInClass;
-import static com.developerworks.lombok.util.Names.*;
 import static java.lang.reflect.Modifier.*;
+import static lombok.core.util.Arrays.array;
+import static lombok.core.util.ErrorMessages.annotationShouldBeUsedInClass;
+import static lombok.core.util.Names.*;
+import static lombok.eclipse.handlers.Eclipse.*;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
+import static lombok.eclipse.handlers.FieldBuilder.newField;
+import static lombok.eclipse.handlers.MemberChecks.*;
+import static lombok.eclipse.handlers.MethodBuilder.newMethod;
 
 import java.beans.*;
 
+import lombok.GenerateJavaBean;
 import lombok.core.AnnotationValues;
 import lombok.eclipse.*;
 
@@ -33,7 +34,6 @@ import org.eclipse.jdt.internal.compiler.ast.*;
 import org.eclipse.jdt.internal.compiler.ast.Statement;
 import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.GenerateJavaBean;
 
 /**
  * Generates basic support for making a class annotated with <code>{@link GenerateJavaBean}</code> a JavaBean.

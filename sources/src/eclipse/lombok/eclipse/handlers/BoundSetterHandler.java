@@ -12,38 +12,36 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.eclipse;
+package lombok.eclipse.handlers;
 
-import static com.developerworks.lombok.eclipse.Eclipse.*;
-import static com.developerworks.lombok.eclipse.FieldBuilder.newField;
-import static com.developerworks.lombok.eclipse.MemberChecks.*;
-import static com.developerworks.lombok.eclipse.MethodBuilder.newMethod;
-import static com.developerworks.lombok.util.Arrays.*;
-import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
-import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInField;
-import static com.developerworks.lombok.util.Names.*;
 import static java.lang.reflect.Modifier.*;
 import static lombok.core.handlers.TransformationsUtil.*;
+import static lombok.core.util.Arrays.*;
+import static lombok.core.util.AstGeneration.shouldStopGenerationBasedOn;
+import static lombok.core.util.ErrorMessages.annotationShouldBeUsedInField;
+import static lombok.core.util.Names.*;
 import static lombok.eclipse.Eclipse.*;
+import static lombok.eclipse.handlers.Eclipse.*;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
-import static lombok.eclipse.handlers.LombokBridge.createFieldAccessor;
+import static lombok.eclipse.handlers.FieldBuilder.newField;
+import static lombok.eclipse.handlers.Lombok.createFieldAccessor;
+import static lombok.eclipse.handlers.MemberChecks.*;
+import static lombok.eclipse.handlers.MethodBuilder.newMethod;
 import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccStatic;
 
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AccessLevel;
+import lombok.*;
 import lombok.core.AnnotationValues;
 import lombok.eclipse.EclipseAnnotationHandler;
 import lombok.eclipse.EclipseNode;
+import lombok.javac.handlers.JavaBeanHandler;
 
 import org.eclipse.jdt.internal.compiler.ast.*;
 import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.GenerateBoundSetter;
-import com.developerworks.lombok.GenerateJavaBean;
-import com.developerworks.lombok.javac.JavaBeanHandler;
 
 /**
  * Generates a "bound" setter for a field annotated with <code>{@link GenerateBoundSetter}</code>.

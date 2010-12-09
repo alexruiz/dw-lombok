@@ -12,7 +12,7 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.util;
+package lombok.core.util;
 
 import static java.util.Arrays.copyOf;
 

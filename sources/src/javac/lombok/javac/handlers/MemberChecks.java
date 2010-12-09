@@ -12,7 +12,7 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.javac;
+package lombok.javac.handlers;
 
 import static com.sun.tools.javac.code.Flags.*;
 import static lombok.core.AST.Kind.FIELD;

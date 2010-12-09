@@ -12,10 +12,10 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.util;
+package lombok.core.util;
 
-import static com.developerworks.lombok.util.Arrays.array;
 import static java.lang.Character.*;
+import static lombok.core.util.Arrays.array;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

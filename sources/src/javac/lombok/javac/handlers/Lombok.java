@@ -20,21 +20,13 @@ import lombok.javac.JavacNode;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
 /**
- * The purpose of this class is to access package-level methods from lombok.
- *
  * @author Alex Ruiz
  */
-public final class LombokBridge {
+final class Lombok {
 
-  /**
-   * Creates an expression that reads the field. Will either be {@code this.field} or {@code this.getField()} depending
-   * on whether or not there's a getter.
-   * @param node a Javac-specific version of a lombok class that represents a field.
-   * @return the created expression.
-   */
-  public static JCExpression createFieldAccessor(JavacNode node) {
+  static JCExpression createFieldAccessor(JavacNode node) {
     return JavacHandlerUtil.createFieldAccessor(node.getTreeMaker(), node, ALWAYS_FIELD);
   }
 
-  private LombokBridge() {}
+  private Lombok() {}
 }

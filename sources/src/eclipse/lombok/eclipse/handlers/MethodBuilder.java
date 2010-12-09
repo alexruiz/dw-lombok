@@ -12,12 +12,12 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.eclipse;
+package lombok.eclipse.handlers;
 
-import static com.developerworks.lombok.eclipse.Eclipse.methodDeclaration;
-import static com.developerworks.lombok.eclipse.MemberChecks.isField;
-import static com.developerworks.lombok.util.Arrays.*;
+import static lombok.core.util.Arrays.*;
 import static lombok.eclipse.Eclipse.ECLIPSE_DO_NOT_TOUCH_FLAG;
+import static lombok.eclipse.handlers.Eclipse.methodDeclaration;
+import static lombok.eclipse.handlers.MemberChecks.isField;
 import lombok.eclipse.EclipseNode;
 
 import org.eclipse.jdt.internal.compiler.ast.*;

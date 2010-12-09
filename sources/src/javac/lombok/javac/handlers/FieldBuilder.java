@@ -12,10 +12,10 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.javac;
+package lombok.javac.handlers;
 
-import static com.developerworks.lombok.util.Names.splitNameOf;
 import static com.sun.tools.javac.util.List.nil;
+import static lombok.core.util.Names.splitNameOf;
 import static lombok.javac.handlers.JavacHandlerUtil.chainDots;
 import lombok.javac.JavacNode;
 

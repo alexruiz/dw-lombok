@@ -12,7 +12,7 @@
  * 
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok;
+package lombok;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.SOURCE;

@@ -1,5 +1,5 @@
 /*
- * Created on Dec 8, 2010
+ * Created on Dec 7, 2010
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,28 +12,21 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.util;
+package lombok.eclipse.handlers;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static lombok.eclipse.handlers.EclipseHandlerUtil.FieldAccess.ALWAYS_FIELD;
+import lombok.eclipse.EclipseNode;
 
-import org.junit.Test;
+import org.eclipse.jdt.internal.compiler.ast.Expression;
 
 /**
- * Tests for <code>{@link Arrays#isNotEmpty(Object[])}</code>.
- *
  * @author Alex Ruiz
  */
-public class Arrays_isNotEmpty_Test {
+public final class Lombok {
 
-  @Test public void should_return_false_if_array_is_null() {
-    assertThat(Arrays.isNotEmpty(null)).isFalse();
+  static Expression createFieldAccessor(EclipseNode node) {
+    return EclipseHandlerUtil.createFieldAccessor(node, ALWAYS_FIELD, node.get());
   }
 
-  @Test public void should_return_false_if_array_is_empty() {
-    assertThat(Arrays.isNotEmpty(new Object[0])).isFalse();
-  }
-
-  @Test public void should_return_true_if_array_is_not_empty() {
-    assertThat(Arrays.isNotEmpty(new Object[] { "Yoda" })).isTrue();
-  }
+  private Lombok() {}
 }

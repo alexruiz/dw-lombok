@@ -12,32 +12,30 @@
  *
  * Copyright @2010 the original author or authors.
  */
-package com.developerworks.lombok.javac;
+package lombok.javac.handlers;
 
-import static com.developerworks.lombok.javac.FieldBuilder.newField;
-import static com.developerworks.lombok.javac.JCNoType.voidType;
-import static com.developerworks.lombok.javac.MemberChecks.*;
-import static com.developerworks.lombok.javac.MethodBuilder.newMethod;
-import static com.developerworks.lombok.util.AstGeneration.shouldStopGenerationBasedOn;
-import static com.developerworks.lombok.util.ErrorMessages.annotationShouldBeUsedInField;
-import static com.developerworks.lombok.util.Names.*;
 import static com.sun.tools.javac.code.Flags.*;
 import static lombok.core.handlers.TransformationsUtil.*;
+import static lombok.core.util.AstGeneration.shouldStopGenerationBasedOn;
+import static lombok.core.util.ErrorMessages.annotationShouldBeUsedInField;
+import static lombok.core.util.Names.*;
+import static lombok.javac.handlers.FieldBuilder.newField;
+import static lombok.javac.handlers.JCNoType.voidType;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
-import static lombok.javac.handlers.LombokBridge.createFieldAccessor;
+import static lombok.javac.handlers.Lombok.createFieldAccessor;
+import static lombok.javac.handlers.MemberChecks.*;
+import static lombok.javac.handlers.MethodBuilder.newMethod;
 
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
 
-import lombok.AccessLevel;
+import lombok.*;
 import lombok.core.AnnotationValues;
 import lombok.javac.JavacAnnotationHandler;
 import lombok.javac.JavacNode;
 
 import org.mangosdk.spi.ProviderFor;
 
-import com.developerworks.lombok.GenerateBoundSetter;
-import com.developerworks.lombok.GenerateJavaBean;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
