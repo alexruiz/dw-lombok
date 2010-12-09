@@ -124,6 +124,7 @@ public class JavaBeanHandler implements JavacAnnotationHandler<GenerateJavaBean>
   }
 
   private void generateChangeListenerMethod(String methodName, JavacNode typeNode) {
+    if (methodAlreadyExists(methodName, typeNode)) return;
     TreeMaker treeMaker = typeNode.getTreeMaker();
     JCMethodDecl methodDecl = newMethod().withModifiers(PUBLIC)
                                          .withName(methodName)
