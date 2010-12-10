@@ -14,21 +14,19 @@
  */
 package lombok.core.util;
 
-import static lombok.AccessLevel.NONE;
 import static org.fest.assertions.Assertions.assertThat;
-import lombok.AccessLevel;
+import static org.fest.util.Arrays.array;
 
 import org.junit.Test;
 
 /**
- * Tests for <code>{@link AstGeneration#shouldStopGenerationBasedOn(AccessLevel)}</code>.
+ * Tests for <code>{@link Names#splitNameOf(Class)}</code>.
  *
  * @author Alex Ruiz
  */
-public class AstGeneration_shouldStopGenerationBasedOn_Test {
+public class Names_splitNameOf_Test {
 
-  @Test public void should_return_true_if_AccessLevel_is_NONE() {
-    assertThat(AstGeneration.shouldStopGenerationBasedOn(NONE)).isTrue();
+  @Test public void should_split_name_of_class() {
+    assertThat(Names.splitNameOf(String.class)).isEqualTo(array("java", "lang", "String"));
   }
-
 }

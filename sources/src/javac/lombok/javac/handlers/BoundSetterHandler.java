@@ -16,13 +16,13 @@ package lombok.javac.handlers;
 
 import static com.sun.tools.javac.code.Flags.*;
 import static lombok.core.handlers.TransformationsUtil.*;
-import static lombok.core.util.AstGeneration.shouldStopGenerationBasedOn;
-import static lombok.core.util.ErrorMessages.annotationShouldBeUsedInField;
+import static lombok.core.util.AstGeneration.stopAstGeneration;
+import static lombok.core.util.ErrorMessages.canBeUsedOnFieldOnly;
 import static lombok.core.util.Names.*;
 import static lombok.javac.handlers.FieldBuilder.newField;
 import static lombok.javac.handlers.JCNoType.voidType;
 import static lombok.javac.handlers.JavacHandlerUtil.*;
-import static lombok.javac.handlers.Lombok.createFieldAccessor;
+import static lombok.javac.handlers.Lombok.newFieldAccessor;
 import static lombok.javac.handlers.MemberChecks.*;
 import static lombok.javac.handlers.MethodBuilder.newMethod;
 
@@ -107,7 +107,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     JavacNode mayBeField = astWrapper.up();
     if (mayBeField == null) return false;
     if (!isField(mayBeField)) {
-      astWrapper.addError(annotationShouldBeUsedInField(TARGET_ANNOTATION_TYPE));
+      astWrapper.addError(canBeUsedOnFieldOnly(TARGET_ANNOTATION_TYPE));
       return true;
     }
     JavacNode typeNode = findTypeNodeFrom(mayBeField);
@@ -150,7 +150,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
 
   private void generateSetter(String propertyNameFieldName, GenerateBoundSetter setter, JavacNode fieldNode) {
     AccessLevel accessLevel = setter.value();
-    if (shouldStopGenerationBasedOn(accessLevel)) return;
+    if (stopAstGeneration(accessLevel)) return;
     String setterName = toSetterName(fieldNode.getName());
     if (methodAlreadyExists(setterName, fieldNode)) return;
     injectMethod(fieldNode.up(), createSetterDecl(accessLevel, propertyNameFieldName, setterName, fieldNode));
@@ -194,14 +194,14 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
   private JCStatement oldValueVariableDecl(Name oldValueName, JavacNode fieldNode) {
     TreeMaker treeMaker = fieldNode.getTreeMaker();
     JCVariableDecl varDecl = (JCVariableDecl) fieldNode.get();
-    JCExpression init = createFieldAccessor(fieldNode);
+    JCExpression init = newFieldAccessor(fieldNode);
     return treeMaker.VarDef(treeMaker.Modifiers(FINAL), oldValueName, varDecl.vartype, init);
   }
 
   private JCStatement assignNewValueToFieldDecl(JavacNode fieldNode) {
     JCVariableDecl fieldDecl = (JCVariableDecl) fieldNode.get();
     TreeMaker treeMaker = fieldNode.getTreeMaker();
-    JCExpression fieldRef = createFieldAccessor(fieldNode);
+    JCExpression fieldRef = newFieldAccessor(fieldNode);
     JCAssign assign = treeMaker.Assign(fieldRef, treeMaker.Ident(fieldDecl.name));
     return treeMaker.Exec(assign);
   }
@@ -211,7 +211,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
     JCExpression fn = chainDots(treeMaker, fieldNode, PROPERTY_SUPPORT_FIELD_NAME, FIRE_PROPERTY_CHANGE_METHOD_NAME);
     List<JCExpression> args = List.<JCExpression> of(treeMaker.Ident(fieldNode.toName(propertyNameFieldName)),
                                                      treeMaker.Ident(oldValueName),
-                                                     createFieldAccessor(fieldNode));
+                                                     newFieldAccessor(fieldNode));
     JCMethodInvocation m = treeMaker.Apply(List.<JCExpression> nil(), fn, args);
     return treeMaker.Exec(m);
   }

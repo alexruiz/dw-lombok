@@ -17,14 +17,14 @@ package lombok.eclipse.handlers;
 import static java.lang.reflect.Modifier.*;
 import static lombok.core.handlers.TransformationsUtil.*;
 import static lombok.core.util.Arrays.*;
-import static lombok.core.util.AstGeneration.shouldStopGenerationBasedOn;
-import static lombok.core.util.ErrorMessages.annotationShouldBeUsedInField;
+import static lombok.core.util.AstGeneration.stopAstGeneration;
+import static lombok.core.util.ErrorMessages.canBeUsedOnFieldOnly;
 import static lombok.core.util.Names.*;
 import static lombok.eclipse.Eclipse.*;
 import static lombok.eclipse.handlers.Eclipse.*;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
 import static lombok.eclipse.handlers.FieldBuilder.newField;
-import static lombok.eclipse.handlers.Lombok.createFieldAccessor;
+import static lombok.eclipse.handlers.Lombok.newFieldAccessor;
 import static lombok.eclipse.handlers.MemberChecks.*;
 import static lombok.eclipse.handlers.MethodBuilder.newMethod;
 import static org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.AccStatic;
@@ -99,7 +99,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
     EclipseNode mayBeField = astWrapper.up();
     if (mayBeField == null) return false;
     if (!isField(mayBeField)) {
-      astWrapper.addError(annotationShouldBeUsedInField(TARGET_ANNOTATION_TYPE));
+      astWrapper.addError(canBeUsedOnFieldOnly(TARGET_ANNOTATION_TYPE));
       return true;
     }
     EclipseNode typeNode = findTypeNodeFrom(mayBeField);
@@ -142,7 +142,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
 
   private void generateSetter(String propertyNameFieldName, GenerateBoundSetter setter, EclipseNode fieldNode) {
     AccessLevel accessLevel = setter.value();
-    if (shouldStopGenerationBasedOn(accessLevel)) return;
+    if (stopAstGeneration(accessLevel)) return;
     String setterName = toSetterName(fieldNode.getName());
     if (methodAlreadyExists(setterName, fieldNode)) return;
     injectMethod(fieldNode.up(), createSetterDecl(accessLevel, propertyNameFieldName, setterName, fieldNode));
@@ -186,13 +186,13 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
 
   private Statement oldValueVariableDecl(char[] oldValueName, EclipseNode fieldNode) {
     FieldDeclaration varDecl = (FieldDeclaration) fieldNode.get();
-    Expression fieldRef = createFieldAccessor(fieldNode);
+    Expression fieldRef = newFieldAccessor(fieldNode);
     return localDeclaration(oldValueName, varDecl.type, fieldRef, fieldNode.get());
   }
 
   private Statement assignNewValueToFieldDecl(EclipseNode fieldNode) {
     ASTNode source = fieldNode.get();
-    Expression fieldRef = createFieldAccessor(fieldNode);
+    Expression fieldRef = newFieldAccessor(fieldNode);
     Expression name = singleNameReference(fieldNode.getName(), source);
     return assignment(fieldRef, name, source);
   }
@@ -205,7 +205,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
     List<Expression> arguments = new ArrayList<Expression>();
     arguments.add(singleNameReference(propertyNameFieldName, source));
     arguments.add(singleNameReference(oldValueName, source));
-    arguments.add(createFieldAccessor(fieldNode));
+    arguments.add(newFieldAccessor(fieldNode));
     fn.arguments = arguments.toArray(new Expression[arguments.size()]);
     return fn;
   }

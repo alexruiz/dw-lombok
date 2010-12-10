@@ -14,6 +14,7 @@
  */
 package lombok.javac.handlers;
 
+import static lombok.javac.handlers.JavacHandlerUtil.createFieldAccessor;
 import static lombok.javac.handlers.JavacHandlerUtil.FieldAccess.ALWAYS_FIELD;
 import lombok.javac.JavacNode;
 
@@ -24,8 +25,8 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
  */
 final class Lombok {
 
-  static JCExpression createFieldAccessor(JavacNode node) {
-    return JavacHandlerUtil.createFieldAccessor(node.getTreeMaker(), node, ALWAYS_FIELD);
+  static JCExpression newFieldAccessor(JavacNode fieldNode) {
+    return createFieldAccessor(fieldNode.getTreeMaker(), fieldNode, ALWAYS_FIELD);
   }
 
   private Lombok() {}

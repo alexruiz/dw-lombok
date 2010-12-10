@@ -1,1 +1,1 @@
-4 error @lombok.GenerateJavaBean is only supported on classes
+4 error @lombok.GenerateJavaBean can be used on classes only

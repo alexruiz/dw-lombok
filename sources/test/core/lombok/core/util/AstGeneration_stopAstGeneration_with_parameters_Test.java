@@ -28,12 +28,12 @@ import org.junit.runners.*;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Tests for <code>{@link AstGeneration#shouldStopGenerationBasedOn(AccessLevel)}</code>.
+ * Tests for <code>{@link AstGeneration#stopAstGeneration(AccessLevel)}</code>.
  *
  * @author Alex Ruiz
  */
 @RunWith(Parameterized.class)
-public class AstGeneration_shouldStopGenerationBasedOn_with_parameters_Test {
+public class AstGeneration_stopAstGeneration_with_parameters_Test {
 
   @Parameters public static Collection<Object[]> parameters() {
     return list(new Object[][] {
@@ -43,11 +43,11 @@ public class AstGeneration_shouldStopGenerationBasedOn_with_parameters_Test {
   
   private final AccessLevel level;
 
-  public AstGeneration_shouldStopGenerationBasedOn_with_parameters_Test(AccessLevel level) {
+  public AstGeneration_stopAstGeneration_with_parameters_Test(AccessLevel level) {
     this.level = level;
   }
   
   @Test public void should_return_false_if_AccessLevel() {
-    assertThat(AstGeneration.shouldStopGenerationBasedOn(level)).isFalse();
+    assertThat(AstGeneration.stopAstGeneration(level)).isFalse();
   }
 }

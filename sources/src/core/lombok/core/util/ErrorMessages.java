@@ -23,12 +23,16 @@ import java.lang.annotation.Annotation;
  */
 public final class ErrorMessages {
 
-  public static String annotationShouldBeUsedInField(Class<? extends Annotation> annotationType) {
-    return String.format("@%s is only supported on fields", annotationType.getName());
+  public static String canBeUsedOnClassOnly(Class<? extends Annotation> annotationType) {
+    return errorMessage("@%s can be used on classes only", annotationType);
   }
-  
-  public static String annotationShouldBeUsedInClass(Class<? extends Annotation> annotationType) {
-    return String.format("@%s is only supported on classes", annotationType.getName());
+
+  public static String canBeUsedOnFieldOnly(Class<? extends Annotation> annotationType) {
+    return errorMessage("@%s can be used on fields only", annotationType);
+  }
+
+  private static String errorMessage(String format, Class<? extends Annotation> annotationType) {
+    return String.format(format, annotationType.getName());
   }
 
   private ErrorMessages() {}

@@ -16,7 +16,7 @@ package lombok.eclipse.handlers;
 
 import static java.lang.reflect.Modifier.*;
 import static lombok.core.util.Arrays.array;
-import static lombok.core.util.ErrorMessages.annotationShouldBeUsedInClass;
+import static lombok.core.util.ErrorMessages.canBeUsedOnClassOnly;
 import static lombok.core.util.Names.*;
 import static lombok.eclipse.handlers.Eclipse.*;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.*;
@@ -93,7 +93,7 @@ public class JavaBeanHandler implements EclipseAnnotationHandler<GenerateJavaBea
     EclipseNode typeNode = astWrapper.up();
     if (typeNode == null) return false;
     if (!isClass(typeNode)) {
-      astWrapper.addError(annotationShouldBeUsedInClass(TARGET_ANNOTATION_TYPE));
+      astWrapper.addError(canBeUsedOnClassOnly(TARGET_ANNOTATION_TYPE));
       return true;
     }
     generatePropertyChangeSupportField(typeNode);

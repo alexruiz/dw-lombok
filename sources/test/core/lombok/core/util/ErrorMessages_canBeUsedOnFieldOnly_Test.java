@@ -1,5 +1,5 @@
 /*
- * Created on Dec 1, 2010
+ * Created on Dec 9, 2010
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,25 +14,19 @@
  */
 package lombok.core.util;
 
-import static lombok.AccessLevel.NONE;
-import lombok.AccessLevel;
+import static org.fest.assertions.Assertions.assertThat;
+
+import org.junit.Test;
 
 /**
- * Utilities related to AST node generation.
+ * Tests for <code>{@link ErrorMessages#canBeUsedOnFieldOnly(Class)}</code>.
  *
  * @author Alex Ruiz
  */
-public final class AstGeneration {
+public class ErrorMessages_canBeUsedOnFieldOnly_Test {
 
-  /**
-   * Indicates whether code generation should stop based on the given <code>{@link AccessLevel}</code>.
-   * @param level the {@code AccessLevel} to evaluate.
-   * @return {@code true} if the given {@code AccessLevel} is equal to <code>{@link AccessLevel#NONE}</code>; 
-   * {@code false} otherwise.
-   */
-  public static boolean stopAstGeneration(AccessLevel level) {
-    return level == NONE;
+  @Test public void should_create_error_message() {
+    String errorMessage = ErrorMessages.canBeUsedOnFieldOnly(Override.class);
+    assertThat(errorMessage).isEqualTo("@java.lang.Override can be used on fields only");
   }
-
-  private AstGeneration() {}
 }

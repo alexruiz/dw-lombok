@@ -15,7 +15,7 @@
 package lombok.javac.handlers;
 
 import static com.sun.tools.javac.code.Flags.*;
-import static lombok.core.util.ErrorMessages.annotationShouldBeUsedInClass;
+import static lombok.core.util.ErrorMessages.canBeUsedOnClassOnly;
 import static lombok.core.util.Names.*;
 import static lombok.javac.handlers.FieldBuilder.newField;
 import static lombok.javac.handlers.JCNoType.voidType;
@@ -99,7 +99,7 @@ public class JavaBeanHandler implements JavacAnnotationHandler<GenerateJavaBean>
     JavacNode typeNode = astWrapper.up();
     if (typeNode == null) return false;
     if (!isClass(typeNode)) {
-      astWrapper.addError(annotationShouldBeUsedInClass(TARGET_ANNOTATION_TYPE));
+      astWrapper.addError(canBeUsedOnClassOnly(TARGET_ANNOTATION_TYPE));
       return true;
     }
     generatePropertyChangeSupportField(typeNode);

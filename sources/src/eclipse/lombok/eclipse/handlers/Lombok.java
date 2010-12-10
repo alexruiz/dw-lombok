@@ -14,6 +14,7 @@
  */
 package lombok.eclipse.handlers;
 
+import static lombok.eclipse.handlers.EclipseHandlerUtil.createFieldAccessor;
 import static lombok.eclipse.handlers.EclipseHandlerUtil.FieldAccess.ALWAYS_FIELD;
 import lombok.eclipse.EclipseNode;
 
@@ -24,8 +25,8 @@ import org.eclipse.jdt.internal.compiler.ast.Expression;
  */
 public final class Lombok {
 
-  static Expression createFieldAccessor(EclipseNode node) {
-    return EclipseHandlerUtil.createFieldAccessor(node, ALWAYS_FIELD, node.get());
+  static Expression newFieldAccessor(EclipseNode fieldNode) {
+    return createFieldAccessor(fieldNode, ALWAYS_FIELD, fieldNode.get());
   }
 
   private Lombok() {}
