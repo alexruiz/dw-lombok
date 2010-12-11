@@ -120,7 +120,7 @@ public class BoundSetterHandler implements EclipseAnnotationHandler<GenerateBoun
 
   private void generateSetter(List<EclipseNode> fields, GenerateBoundSetter setter, EclipseNode typeNode) {
     for (EclipseNode fieldNode : fields) {
-      String propertyNameFieldName = nameOfConstantHavingPropertyName(fieldNode.getName());
+      String propertyNameFieldName = nameOfConstantBasedOnProperty(fieldNode.getName());
       generatePropertyNameConstant(propertyNameFieldName, fieldNode, typeNode);
       generateSetter(propertyNameFieldName, setter, fieldNode);
     }

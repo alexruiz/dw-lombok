@@ -59,7 +59,7 @@ public final class Names {
    * @param propertyName the name of the property.
    * @return the name of the constant that holds the name of a property.
    */
-  public static String nameOfConstantHavingPropertyName(String propertyName) {
+  public static String nameOfConstantBasedOnProperty(String propertyName) {
     char[] chars = propertyName.toCharArray();
     StringBuilder b = new StringBuilder();
     b.append("PROP_");

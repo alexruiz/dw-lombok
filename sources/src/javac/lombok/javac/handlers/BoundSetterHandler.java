@@ -128,7 +128,7 @@ public class BoundSetterHandler implements JavacAnnotationHandler<GenerateBoundS
 
   private void generateSetter(Collection<JavacNode> fields, GenerateBoundSetter setter, JavacNode typeNode) {
     for (JavacNode fieldNode : fields) {
-      String propertyNameFieldName = nameOfConstantHavingPropertyName(fieldNode.getName());
+      String propertyNameFieldName = nameOfConstantBasedOnProperty(fieldNode.getName());
       generatePropertyNameConstant(propertyNameFieldName, fieldNode, typeNode);
       generateSetter(propertyNameFieldName, setter, fieldNode);
     }
