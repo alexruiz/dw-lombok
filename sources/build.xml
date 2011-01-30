@@ -2,6 +2,19 @@
 	<property name="ivy.retrieve.pattern" value="lib/[conf]/[artifact].[ext]" />
 	<available file="lib/ivyplusplus.jar" property="ivyplusplus.available" />
 
+	<target name="clean" description="Removes all generated files.">
+    <delete dir="build" quiet="true" />
+    <delete dir="dist" quiet="true" />
+  </target>
+  
+  <target name="distclean" depends="clean" description="Deletes everything that this build script has ever generated.">
+    <delete dir="lib" quiet="true" />
+    <delete dir="dist" quiet="true" />
+    <delete dir=".settings" quiet="true" />
+    <delete file=".project" quiet="true" />
+    <delete file=".classpath" quiet="true" />
+  </target>
+	
 	<target name="download-ipp" unless="ivyplusplus.available">
 		<mkdir dir="lib" />
 		<get src="http://projectlombok.org/downloads/ivyplusplus.jar" dest="lib/ivyplusplus.jar" usetimestamp="true" />
@@ -53,5 +66,53 @@
       <apt location="lib/build/spi.jar" />
 		</ivy:eclipsegen>
 	</target>
+
+  <path id="build.path">
+    <fileset dir="lib/build">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+  
+  <path id="runtime.path">
+    <fileset dir="lib/runtime">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+  
+  <path id="test.path">
+    <fileset dir="lib/test">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+  
+  <target name="compile" depends="ensureBuildDeps" description="Compiles the code.">
+  	<mkdir dir="build/lombok-javabeans" />
+  	<delete file="build/lombok-javabeans/META-INF/services/javax.annotation.processing.Processor" quiet="true" />
+    <ivy:compile destdir="build/lombok-javabeans" source="1.6" target="1.6" includeantruntime="false">
+      <src path="src/core" />
+      <src path="src/eclipse" />
+      <src path="src/javac" />
+      <include name="lombok/**" />
+      <classpath location="build/lombok-javabeans" />
+      <classpath refid="build.path" />
+    </ivy:compile>
+    <mkdir dir="build/lombok-javabeans/META-INF" />
+    <mkdir dir="build/lombok-javabeans/META-INF/services" />
+    <echo file="build/lombok-javabeans/META-INF/services/javax.annotation.processing.Processor">lombok.core.AnnotationProcessor</echo>
+  </target>
+
+	 <target name="dist" description="Builds jar file" depends="compile">
+	    <mkdir dir="dist" />
+	    <jar destfile="dist/lombok-javabeans.jar">
+	      <fileset dir="build/lombok-javabeans">
+	        <exclude name="com/sun/**"/>
+	      </fileset>
+	      <manifest>
+	        <attribute name="Premain-Class" value="lombok.core.Agent" />
+	        <attribute name="Agent-Class" value="lombok.core.Agent" />
+	        <attribute name="Can-Redefine-Classes" value="true" />
+	      </manifest>
+	    </jar>
+	  </target>
 
 </project>
