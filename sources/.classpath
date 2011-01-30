@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/core/"/>
+	<classpathentry kind="src" path="src/eclipse/"/>
+	<classpathentry kind="src" path="src/javac/"/>
+	<classpathentry kind="src" path="test/core/"/>
+	<classpathentry kind="src" path="test/eclipse/"/>
+	<classpathentry kind="src" path="test/javac/"/>
+	<classpathentry kind="src" path=".apt_generated">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/build/core.runtime.jar" sourcepath="lib/contrib/core.runtime.zip"/>
+	<classpathentry kind="lib" path="lib/build/jdt.core.jar" sourcepath="lib/contrib/jdt.core.zip"/>
+	<classpathentry kind="lib" path="lib/build/lombok.jar" sourcepath="lib/contrib/lombok.zip"/>
+	<classpathentry kind="lib" path="lib/build/spi.jar"/>
+	<classpathentry kind="lib" path="lib/build/javac.jar" sourcepath="lib/contrib/javac.zip"/>
+	<classpathentry kind="lib" path="lib/build/ecj.jar" sourcepath="lib/contrib/ecj.zip"/>
+	<classpathentry kind="lib" path="lib/test/junit.jar" sourcepath="lib/contrib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/test/fest-assert.jar" sourcepath="lib/contrib/fest-assert.jar"/>
+	<classpathentry kind="lib" path="lib/test/fest-util.jar" sourcepath="lib/contrib/fest-util.jar"/>
+	<classpathentry kind="lib" path="lib/test/lombok-test-core.jar" sourcepath="lib/contrib/lombok-test-core.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="easytesting.org"
+		module="lombok-javabeans"
+		revision="working@alex-desktop"
+		conf="contrib"
+		confs="contrib"
+		date="20101208220639"/>
+	<dependencies>
+		<module organisation="eclipse.org" name="jdt.core" >
+			<revision name="3.6.0" status="integration" pubdate="20100505120000" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://www.eclipse.org/eclipse/" downloaded="false" searched="false" default="false" conf="sources" position="8">
+				<license name="Eclipse Public Licence v1.0" url="http://www.eclipse.org/org/documents/epl-v10.php"/>
+				<metadata-artifact status="no" details="" size="716" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/eclipse.org/jdt.core/ivy-3.6.0.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/eclipse.org-jdt.core-3.6.0.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="3.6.0" rev-constraint-default="3.6.0" rev-constraint-dynamic="3.6.0" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="jdt.core" type="zip" ext="zip" extra-url="http://projectlombok.org/ivyrepo/eclipse/org.eclipse.jdt.core_3.6.0.v_A58-sources.jar" status="no" details="" size="3682954" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/eclipse.org/jdt.core/zips/jdt.core-3.6.0.zip">
+						<origin-location is-local="false" location="http://projectlombok.org/ivyrepo/eclipse/org.eclipse.jdt.core_3.6.0.v_A58-sources.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="eclipse.org" name="core.runtime" >
+			<revision name="3.6.0" status="integration" pubdate="20100505120000" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://www.eclipse.org/eclipse/" downloaded="false" searched="false" default="false" conf="sources" position="7">
+				<license name="Eclipse Public Licence v1.0" url="http://www.eclipse.org/org/documents/epl-v10.php"/>
+				<metadata-artifact status="no" details="" size="736" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/eclipse.org/core.runtime/ivy-3.6.0.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/eclipse.org-core.runtime-3.6.0.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="3.6.0" rev-constraint-default="3.6.0" rev-constraint-dynamic="3.6.0" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="core.runtime" type="zip" ext="zip" extra-url="http://projectlombok.org/ivyrepo/eclipse/org.eclipse.core.runtime_3.6.0.v20100505-sources.jar" status="no" details="" size="77196" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/eclipse.org/core.runtime/zips/core.runtime-3.6.0.zip">
+						<origin-location is-local="false" location="http://projectlombok.org/ivyrepo/eclipse/org.eclipse.core.runtime_3.6.0.v20100505-sources.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="eclipse.org" name="ecj" >
+			<revision name="3.6.0" status="integration" pubdate="20100608091100" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://www.eclipse.org/eclipse/" downloaded="false" searched="false" default="false" conf="sources" position="6">
+				<license name="Eclipse Public Licence v1.0" url="http://www.eclipse.org/org/documents/epl-v10.php"/>
+				<metadata-artifact status="no" details="" size="724" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/eclipse.org/ecj/ivy-3.6.0.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/eclipse.org-ecj-3.6.0.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="3.6.0" rev-constraint-default="3.6.0" rev-constraint-dynamic="3.6.0" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="ecj" type="zip" ext="zip" extra-url="http://eclipse.mirror.kangaroot.net/eclipse/downloads/drops/R-3.6-201006080911/ecjsrc-3.6.zip" status="no" details="" size="1310484" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/eclipse.org/ecj/zips/ecj-3.6.0.zip">
+						<origin-location is-local="false" location="http://eclipse.mirror.kangaroot.net/eclipse/downloads/drops/R-3.6-201006080911/ecjsrc-3.6.zip"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="projectlombok.org" name="javac" >
+			<revision name="1.6.0.18" status="integration" pubdate="20100225011200" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://openjdk.java.net/" downloaded="false" searched="false" default="false" conf="sources" position="5">
+				<license name="GNU General Public License v2 with Classpath Exception" url="http://openjdk.java.net/legal/gplv2+ce.html"/>
+				<metadata-artifact status="no" details="" size="687" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/projectlombok.org/javac/ivy-1.6.0.18.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/projectlombok.org-javac-1.6.0.18.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="1.6.0.18" rev-constraint-default="1.6.0.18" rev-constraint-dynamic="1.6.0.18" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="javac" type="zip" ext="zip" extra-url="http://projectlombok.org/ivyrepo/langtools/javac-sources.zip" status="no" details="" size="971404" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/projectlombok.org/javac/zips/javac-1.6.0.18.zip">
+						<origin-location is-local="false" location="http://projectlombok.org/ivyrepo/langtools/javac-sources.zip"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="projectlombok.org" name="lombok" >
+			<revision name="0.10.0-BETA2-HEAD" status="integration" pubdate="20100225011200" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://projectlombok.org/" downloaded="false" searched="false" default="false" conf="sources" position="4">
+				<license name="MIT License" url="http://www.opensource.org/licenses/mit-license.php"/>
+				<metadata-artifact status="no" details="" size="823" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/projectlombok.org/lombok/ivy-0.10.0-BETA2-HEAD.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/projectlombok.org-lombok-0.10.0-BETA2-HEAD.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="0.10.0-BETA2-HEAD" rev-constraint-default="0.10.0-BETA2-HEAD" rev-constraint-dynamic="0.10.0-BETA2-HEAD" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="lombok" type="zip" ext="zip" extra-url="http://cloud.github.com/downloads/alexruiz/dw-lombok/lombok-0.10.0-BETA2-HEAD-src.jar" status="no" details="" size="384053" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/projectlombok.org/lombok/zips/lombok-0.10.0-BETA2-HEAD.zip">
+						<origin-location is-local="false" location="http://cloud.github.com/downloads/alexruiz/dw-lombok/lombok-0.10.0-BETA2-HEAD-src.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="projectlombok.org" name="lombok-test-core" >
+			<revision name="0.10.0-BETA2-HEAD" status="integration" pubdate="20101204112000" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://projectlombok.org/" downloaded="false" searched="false" default="false" conf="sources" position="3">
+				<license name="MIT License" url="http://www.opensource.org/licenses/mit-license.php"/>
+				<metadata-artifact status="no" details="" size="851" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/projectlombok.org/lombok-test-core/ivy-0.10.0-BETA2-HEAD.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/projectlombok.org-lombok-test-core-0.10.0-BETA2-HEAD.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="0.10.0-BETA2-HEAD" rev-constraint-default="0.10.0-BETA2-HEAD" rev-constraint-dynamic="0.10.0-BETA2-HEAD" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="lombok-test-core" type="zip" ext="zip" extra-url="http://cloud.github.com/downloads/alexruiz/dw-lombok/lombok-test-core-0.10.0-BETA2-HEAD-src.jar" status="no" details="" size="6998" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/projectlombok.org/lombok-test-core/zips/lombok-test-core-0.10.0-BETA2-HEAD.zip">
+						<origin-location is-local="false" location="http://cloud.github.com/downloads/alexruiz/dw-lombok/lombok-test-core-0.10.0-BETA2-HEAD-src.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="easytesting.org" name="fest-util" >
+			<revision name="1.1.4" status="integration" pubdate="20100225011200" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://fest.easytesting.org/" downloaded="false" searched="false" default="false" conf="sources" position="2">
+				<license name="Apache 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="773" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/easytesting.org/fest-util/ivy-1.1.4.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/easytesting.org-fest-util-1.1.4.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="1.1.4" rev-constraint-default="1.1.4" rev-constraint-dynamic="1.1.4" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="fest-util" type="jar" ext="jar" extra-url="http://repo1.maven.org/maven2/org/easytesting/fest-util/1.1.4/fest-util-1.1.4-sources.jar" status="no" details="" size="21830" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/easytesting.org/fest-util/jars/fest-util-1.1.4.jar">
+						<origin-location is-local="false" location="UNKNOWN"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="easytesting.org" name="fest-assert" >
+			<revision name="1.3" status="integration" pubdate="20100225011200" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://fest.easytesting.org/" downloaded="false" searched="false" default="false" conf="sources" position="1">
+				<license name="Apache 2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="773" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/easytesting.org/fest-assert/ivy-1.3.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/easytesting.org-fest-assert-1.3.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="1.3" rev-constraint-default="1.3" rev-constraint-dynamic="1.3" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="fest-assert" type="jar" ext="jar" extra-url="http://repo1.maven.org/maven2/org/easytesting/fest-assert/1.3/fest-assert-1.3-sources.jar" status="no" details="" size="95733" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/easytesting.org/fest-assert/jars/fest-assert-1.3.jar">
+						<origin-location is-local="false" location="UNKNOWN"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="junit.org" name="junit" >
+			<revision name="4.8.2" status="integration" pubdate="20100225011200" resolver="projectLocalRepo" artresolver="projectLocalRepo" homepage="http://junit.org/" downloaded="false" searched="false" default="false" conf="sources" position="0">
+				<license name="MIT License" url="http://www.opensource.org/licenses/mit-license.php"/>
+				<metadata-artifact status="no" details="" size="727" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/junit.org/junit/ivy-4.8.2.xml" searched="false" origin-is-local="true" origin-location="/home/alex/workspace/dw-lombok/sources/buildScripts/ivy-repo/junit.org-junit-4.8.2.xml"/>
+				<caller organisation="easytesting.org" name="lombok-javabeans" conf="contrib" rev="4.8.2" rev-constraint-default="4.8.2" rev-constraint-dynamic="4.8.2" callerrev="working@alex-desktop"/>
+				<artifacts>
+					<artifact name="junit" type="jar" ext="jar" extra-url="http://cloud.github.com/downloads/KentBeck/junit/junit-4.8.2-src.jar" status="no" details="" size="237344" time="0" location="/home/alex/workspace/dw-lombok/sources/ivyCache/junit.org/junit/jars/junit-4.8.2.jar">
+						<origin-location is-local="false" location="UNKNOWN"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>
